@@ -1,0 +1,41 @@
+
+.channel-card[data-v-58be463b] {
+  height: 80px;
+  overflow: hidden;
+}
+.channel-card-active[data-v-58be463b] {
+  border: 2px solid var(--bs-primary);
+  position: relative;
+}
+.channel-card-active[data-v-58be463b]::before {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  content: "\2713";
+  display: inline-block;
+  color: var(--bs-primary);
+  right: 0px;
+}
+
+
+.channel-card[data-v-6790cd57] {
+  height: 110px;
+  overflow: hidden;
+  font-weight: bold;
+}
+.channel-card-active[data-v-6790cd57] {
+  border: 2px solid var(--bs-primary);
+  position: relative;
+}
+.channel-card-active[data-v-6790cd57]::before {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  content: "\2713";
+  display: inline-block;
+  color: var(--bs-primary);
+  right: 0px;
+}
+
