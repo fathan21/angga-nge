@@ -9,25 +9,11 @@
                                 class="text-grey-light py-3"
                                 style="width: 100px"
                             >
-                                Nama
+                                Username
                             </td>
                             <td class="font-weight-bold">
                                 :&nbsp;&nbsp;&nbsp;
-                                {{ data.name }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-grey-light py-3">Email</td>
-                            <td class="font-weight-bold">
-                                :&nbsp;&nbsp;&nbsp;
-                                {{ data.email }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-grey-light py-3">Phone</td>
-                            <td class="font-weight-bold">
-                                :&nbsp;&nbsp;&nbsp;
-                                {{ data.phone }}
+                                {{ data.username }}
                             </td>
                         </tr>
                     </table>

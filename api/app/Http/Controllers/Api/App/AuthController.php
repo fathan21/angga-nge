@@ -34,7 +34,7 @@ class AuthController extends ApiController
         $token = [
             'access_token' => $tokenDt
         ];
-        Cache::set('access_token'.$user->id,$tokenDt);
+        Cache::set('access_token'.$user->id,$tokenDt, now()->addDays(10));
         $result = [
             ...$user->only(['username']),
             ...$token

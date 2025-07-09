@@ -61,7 +61,7 @@ class MenuController extends ApiController
             'kategori_menu' => 'required',
         ]);
         $data = $this->_model->create($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show($id)
@@ -87,7 +87,7 @@ class MenuController extends ApiController
             abort(404, ' data not found');
         }
         $data->update($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function destroy($id)

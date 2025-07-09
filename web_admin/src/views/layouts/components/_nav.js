@@ -1,47 +1,55 @@
 const navAdmin = [
   {
+    name: "Data Admin",
     label: "Dashboard",
     icon: "fa fa-home",
     route: "app",
   },
   {
-    label: "Registrasi R1 Jabber",
-    name: "Registrasi R1 Jabber",
-    icon: "fa fa-user",
-    route: "app.xmpp-account-reg.list",
-    notif_name: "account_xmpp_reg",
-  },
-  {
-    label: "Akun R1 Jabber",
-    name: "Akun R1 Jabber",
+    name: "Data Pelanggan",
+    label: "Data Pelanggan",
     icon: "fa fa-users",
-    route: "app.xmpp-account.list",
+    route: "app.pelanggan.list",
   },
   {
-    label: "Admin",
-    name: "admin",
-    icon: "fa fa-lock",
+    name: "Input Transaksi",
+    label: "Input Transaksi",
+    icon: "fa fa-list",
+    route: "app.transaksi.list",
+  },
+  {
+    name: "Data Menu",
+    label: "Data Menu",
+    icon: "fa fa-cubes",
+    route: "app.menu.list",
+  },
+  {
+    name:"Laporan",
+    label: "Laporan",
+    icon: "fa fa-bar-chart",
+    childs: [
+      {
+        label: "Laporan Transaksi",
+        route: "app.laporan.trx",
+      },
+      {
+        label: "Laporan Pelanggan Loyal",
+        route: "app.laporan.pelanggan",
+      }
+    ],
+  },
+  {
+    name: "Promo & Poin",
+    label: "Promo & Poin",
+    icon: "fa fa-percent",
+    route: "app.promo.list",
+  },
+  {
+    name: "Data Admin",
+    label: "Data Admin",
+    icon: "fa fa-user",
     route: "app.users.list",
   },
-  {
-    label: "General Setting",
-    name: "general setting",
-    icon: "fa fa-gear",
-    route: "app.general-settings",
-  },
-  // {
-  //   name: "Settings",
-  //   label: "Setting",
-  //   icon: "fa fa-gear",
-  //   childs: [
-  //     {
-  //       key:'settings admin',
-  //       label: "Admin",
-  //       name: "admin",
-  //       route: "app.users.list",
-  //     }
-  //   ],
-  // },
   
 ];
 

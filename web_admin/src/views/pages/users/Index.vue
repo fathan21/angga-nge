@@ -2,7 +2,7 @@
   <div class="col-md-12 col-sm-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Admin List</h2>
+        
         <ul class="nav navbar-right panel_toolbox">
           <li>
             <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.users.form' })">
@@ -30,7 +30,7 @@
           <div class="row">
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
-                <div class="table-responsive">
+                <div class="">
                   <table class="table table-striped jambo_table bulk_action table-bordered">
                     <thead>
                       <tr>
@@ -58,13 +58,7 @@
                           }}
                         </td>
                         <td>
-                          {{ user.name }}
-                        </td>
-                        <td style="width: 200px;">
-                          {{ user.email }}
-                        </td>
-                        <td style="width: 150px;">
-                          {{ user.phone }}
+                          {{ user.username }}
                         </td>
                         <td style="width: 100px;">
                           <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
@@ -104,7 +98,7 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "name",
+        sort: "username",
         order: "asc",
       },
       search: {
@@ -124,18 +118,8 @@ export default {
           sortable: false,
         },
         {
-          label: "Name",
+          label: "Username",
           field: "name",
-          sortable: true,
-        },
-        {
-          label: "Email",
-          field: "email",
-          sortable: true,
-        },
-        {
-          label: "Phone",
-          field: "phone",
           sortable: true,
         },
         {

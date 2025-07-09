@@ -27,15 +27,6 @@ class CronExpiredXmppNotif extends Command
      */
     public function handle()
     {
-        //
-        $accounts = XmppAccount::where('status', '0')->get();
-        foreach ($accounts as $account) {
-            try {
-                (new TeleBot)->accountXmppNotifExpired($account);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-            $account->forceDelete();
-        }
+        
     }
 }

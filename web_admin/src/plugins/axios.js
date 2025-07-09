@@ -9,7 +9,7 @@ axios.defaults.headers.common["Accept"] = "application/json";
 
 let token = Cookies.get("access_token");
 if (token) {
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  axios.defaults.headers.common["X-AUTH"] = "" + token;
 }
 
 let config = {

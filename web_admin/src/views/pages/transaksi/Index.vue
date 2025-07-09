@@ -2,10 +2,13 @@
   <div class="col-md-12 col-sm-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>&nbsp;</h2>
+        
         <ul class="nav navbar-right panel_toolbox">
           <li>
-
+            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.users.form' })">
+              <i class="fa fa-plus" />
+              Tambah
+            </button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -14,7 +17,6 @@
       <div class="x_content">
         <div class="table-responsive">
           <div class="row">
-
             <div class="col-12 col-sm-6 col-md-4">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="cari..." v-model="search.q"
@@ -28,7 +30,7 @@
           <div class="row">
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
-                <div class="table-responsive">
+                <div class="">
                   <table class="table table-striped jambo_table bulk_action table-bordered">
                     <thead>
                       <tr>
@@ -47,7 +49,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, i) in data" :key="i">
+                      <tr v-for="(user, i) in data" :key="i">
                         <td style="width: 50px;">
                           {{
                             (options.current_page - 1) * options.per_page +
@@ -56,41 +58,16 @@
                           }}
                         </td>
                         <td>
-                          {{ item.name }}
+                          {{ user.username }}
                         </td>
-                        <td style="width: 200px;">
-                          {{ item.username }}
-                        </td>
-                        <td style="width: 150px;">
-                          {{ item.host }}
-                        </td>
-                        <td style="width: 150px;">
-                          {{ item.phone }}
-                        </td>
-                        <td style="width: 150px;">
-                          {{ item.telegram_id }}
-                        </td>
-                        <td style="width: 150px;">
-                          <!-- {{ item.status }} -->
-                          <statusbadge-base v-if="item.status == 1" status="Active">
-                            Active
-                          </statusbadge-base>
-                          <statusbadge-base v-else-if="item.status == 0" status="Pending">
-                            Pending
-                          </statusbadge-base>
-                          <statusbadge-base v-else-if="item.status == 11" status="Deactive">
-                            Deactive
-                          </statusbadge-base>
-                        </td>
-                        <td style="width: 200px;">
-
-                          <button class="btn btn-sm btn-outline-success " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Set Active" @click="changeStatus(item, 1)">
-                            <i class="fa fa-check" />
+                        <td style="width: 100px;">
+                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
+                            <i class="fa fa-pencil" />
                           </button>
-                          <button class="btn btn-sm btn-outline-danger " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Set Deactive" @click="changeStatus(item, 11)">
-                            <i class="fa fa-times" />
+                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
+                            <i class="fa fa-trash" />
                           </button>
                         </td>
                       </tr>
@@ -121,12 +98,11 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "name",
+        sort: "username",
         order: "asc",
       },
       search: {
         q: "",
-        status: "0"
       },
       loading: false,
     };
@@ -142,33 +118,8 @@ export default {
           sortable: false,
         },
         {
-          label: "Name",
-          field: "name",
-          sortable: true,
-        },
-        {
           label: "Username",
-          field: "username",
-          sortable: true,
-        },
-        {
-          label: "Host",
-          field: "host",
-          sortable: true,
-        },
-        {
-          label: "Phone",
-          field: "phone",
-          sortable: true,
-        },
-        {
-          label: "Telegram ID",
-          field: "phone",
-          sortable: false,
-        },
-        {
-          label: "Status",
-          field: "status",
+          field: "name",
           sortable: true,
         },
         {
@@ -181,7 +132,6 @@ export default {
       return {
         page: this.options.current_page,
         q: this.search.q,
-        status: this.search.status,
         sort: this.options.sort + "|" + this.options.order,
       };
     },
@@ -210,7 +160,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/xmpp-accounts", { params: this.moreParams })
+        .get("/app/users", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -247,40 +197,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/xmpp-accounts/${user.id}`, params)
-        .then((res) => {
-          this.$root.notif(res.message);
-          this.loadData();
-        })
-        .catch((res) => {
-          this.$root.notif(res.message, {
-            type: "error",
-            position: "top",
-          });
-        });
-    },
-
-    changeStatus(item, status) {
-      let labelStatus = status == 1 ? "Active Data" : "Deactive Data";
-      this.$swal
-        .fire({
-          width: 350,
-          title: "Yakin?",
-          showCancelButton: true,
-          confirmButtonText: labelStatus,
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            this._changeStatus(item, status);
-          }
-        });
-    },
-    _changeStatus(user, newStatus) {
-      let params = Object.assign({}, user);
-      params.status = newStatus;
-      var action = newStatus == 1 ? 'active' : 'deactive';
-      this.$axios
-        .put(`/app/xmpp-accounts/${user.id}/${action}`, params)
+        .delete(`/app/users/${user.id}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -294,7 +211,7 @@ export default {
     },
     editItem(item) {
       this.$router.push({
-        name: "app.xmpp-account.form",
+        name: "app.users.form",
         params: {
           id: item.id,
         },

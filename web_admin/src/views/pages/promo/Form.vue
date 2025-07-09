@@ -19,62 +19,14 @@
         <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }" class="">
           
           <div class="item form-group">
-            <label class="col-form-label col-12 col-md-3  label-align" >Nama <span
-                class="required">*</span>
-            </label>
-            <div class="col-12  col-md-6 col-sm-6">
-              <Field name="name" class="form-control" v-model="form.name" :class="[{ 'p-error': errors.name }]"
-                type="text" />
-              <span class="p-error" v-if="errors.name">
-                *{{ errors.name }}
-              </span>
-            </div>
-          </div>
-          <div class="item form-group">
             <label class="col-form-label col-12 col-md-3  label-align" >Username <span
                 class="required">*</span>
             </label>
-            <div class="col-12  col-md-3">
+            <div class="col-12  col-md-6 col-sm-6">
               <Field name="username" class="form-control" v-model="form.username" :class="[{ 'p-error': errors.username }]"
                 type="text" />
               <span class="p-error" v-if="errors.username">
                 *{{ errors.username }}
-              </span>
-            </div>
-            <div class="">
-              @
-            </div>
-            <div class="col-12  col-md-2">
-              <Field name="host" class="form-control" v-model="form.host" :class="[{ 'p-error': errors.host }]"
-                type="text"  as="select">
-                  <option v-for="h in host" :key="h" :value="h" v-text="h"></option>
-              </Field>
-              <span class="p-error" v-if="errors.host">
-                *{{ errors.host }}
-              </span>
-            </div>
-          </div>
-          <div class="item form-group">
-            <label class="col-form-label col-12 col-md-3  label-align" >Phone <span
-                class="required">*</span>
-            </label>
-            <div class="col-12  col-md-6 col-sm-6">
-              <Field name="phone" class="form-control" v-model="form.phone" :class="[{ 'p-error': errors.phone }]"
-                type="text" />
-              <span class="p-error" v-if="errors.phone">
-                *{{ errors.phone }}
-              </span>
-            </div>
-          </div>
-          <div class="item form-group">
-            <label class="col-form-label col-12 col-md-3  label-align" >Telegram Id <span
-                class="required">*</span>
-            </label>
-            <div class="col-12  col-md-6 col-sm-6">
-              <Field name="telegram_id" class="form-control" v-model="form.telegram_id" :class="[{ 'p-error': errors.telegram_id }]"
-                type="text" />
-              <span class="p-error" v-if="errors.telegram_id">
-                *{{ errors.telegram_id }}
               </span>
             </div>
           </div>
@@ -84,7 +36,7 @@
             </label>
             <div class="col-12  col-md-6 col-sm-6">
               <Field name="password" class="form-control" v-model="form.password"
-                :class="[{ 'p-error': errors.password }]" type="text" />
+                :class="[{ 'p-error': errors.password }]" type="password" />
               <span class="p-error" v-if="errors.password">
                 *{{ errors.password }}
               </span>
@@ -116,28 +68,24 @@ export default {
   },
   data() {
     const schema = yup.object({
-      name: yup.string().required(),
-      host: yup.string().required(),
-      phone: yup.string().required(),
-      telegram_id: yup.string().nullable(),
+      username: yup.string().required(),
       password: !this.$route.params.id
-        ? yup.string().required().min(6)
+        ? yup.string().required().min(5)
         : yup.string(),
     });
     return {
       id: "",
       g_qr: "",
       form: {
-        name: "",
+        username: "",
         email: "",
         phone: "",
         password: "",
-        telegram_id:"",
-        host: "r1jabber.com",
+        role: "",
       },
       old: {},
       schema,
-      host: [],
+      roles: [],
     };
   },
   computed: {
@@ -151,24 +99,17 @@ export default {
   methods: {
     reset() {
       this.form = {
-        name: "",
+        username: "",
         email: "",
         phone: "",
         password: "",
-        host: "",
+        role: "",
       };
     },
 
-    laodHost() {
-      this.$axios
-        .get(`/app/xmpp-host`)
-        .then((res) => {
-          this.host = res.data.data;
-        });
-    },
     loadData() {
       this.$axios
-        .get(`/app/xmpp-accounts/${this.id}`)
+        .get(`/app/users/${this.id}`)
         .then((res) => {
           let data = Object.assign({}, res.data);
           this.old = data;
@@ -187,18 +128,18 @@ export default {
     onSubmit(values) {
       this.$store.dispatch("loading", true);
       let sendData = () => {
-        return this.$axios.post("/app/xmpp-accounts", values);
+        return this.$axios.post("/app/users", values);
       };
 
       if (this.id) {
         sendData = () => {
-          return this.$axios.put(`/app/xmpp-accounts/${this.id}`, values);
+          return this.$axios.put(`/app/users/${this.id}`, values);
         };
       }
       sendData()
         .then((res) => {
           this.$router.push({
-            name: "app.xmpp-account.list",
+            name: "app.users.list",
           });
           this.$root.notif(res.message);
         })
@@ -215,7 +156,6 @@ export default {
   },
 
   mounted() {
-    this.laodHost();
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       this.loadData();

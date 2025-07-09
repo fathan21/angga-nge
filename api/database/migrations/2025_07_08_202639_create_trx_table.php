@@ -23,10 +23,10 @@ return new class extends Migration
             $table->integerIncrements('id_pelanggan');
             $table->string('nama', 20);
             $table->string('no_hp', 15);
-            $table->string('email', 30);
+            $table->string('email', 30)->nullable();
             $table->date('tanggal_daftar');
             $table->double('total_transaksi', 22,2)->nullable();
-            $table->double('toal_poin', 22,2)->nullable();
+            $table->double('total_poin', 22,2)->nullable();
         });
         Schema::create('transaksi', function (Blueprint $table) {
             $table->integerIncrements('id_transaksi');

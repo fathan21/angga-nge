@@ -1,14 +1,18 @@
 
 import user from "./user";
-import xmppAccount from "./xmpp-account";
-import xmppAccountReg from "./xmpp-account-reg";
-import gn from "./general-settings";
+import pelanggan from "./pelanggan";
+import menu from "./menu";
+import transaksi from "./transaksi";
+import laporan from "./laporan";
+import promo from "./promo.js";
 
 const route = [
+  ...menu,
+  ...transaksi,
+  ...laporan,
+  ...pelanggan,
+  ...promo,
   ...user,
-  ...xmppAccount,
-  ...xmppAccountReg,
-  gn,
 
 ];
 

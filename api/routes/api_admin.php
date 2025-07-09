@@ -21,6 +21,7 @@ Route::prefix('app')->group(function () {
     Route::middleware([AuthCus::class])->group(function () {
         Route::get('/dashboard', [UserController::class,'dashboard']);
         Route::get('/user-info', [UserController::class,'info']);
+        Route::get('/notif', [UserController::class,'info']);
         Route::post('/change-password', [UserController::class,'changePassword']);
 
         Route::apiResource('/users', UserController::class);

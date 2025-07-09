@@ -60,7 +60,7 @@ class UserController extends ApiController
         ]);
         $params['password'] =$params['password'];
         $data = $this->_model->create($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show($id)
@@ -91,7 +91,7 @@ class UserController extends ApiController
             abort(404, ' data not found');
         }
         $data->update($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function destroy($id)
@@ -122,7 +122,7 @@ class UserController extends ApiController
         ]);
         $data = auth_user();
         $data->update(['password'=>$params['password']]);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
     
     public function dashboard(Request $request)
@@ -131,7 +131,7 @@ class UserController extends ApiController
         $data = [
             'total_pelanggan'=>Pelanggan::count(),
             'total_trx_hari_ini'=>Transaksi::whereDate('tanggal_taransaksi',$now)->count(),
-            'total_pemasukan'=>Transaksi::whereDate('tanggal_taransaksi',$now)->sum('total'),
+            'total_pemasukan'=>Transaksi::sum('total'),
         ];
         return $this->success($data);
     }

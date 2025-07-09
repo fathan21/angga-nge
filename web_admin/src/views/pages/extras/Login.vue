@@ -27,7 +27,7 @@
                                     <label
                                         class="form-control-placeholder"
                                         for="username"
-                                        >Email</label
+                                        >Username</label
                                     >
                                     <Field
                                         name="username"
@@ -124,11 +124,11 @@ export default {
                 .then((res) => {
                     this.$store.dispatch("auth/login", res.data);
                     if (res.data) {
-                        this.$axios.defaults.headers.common["Authorization"] =
-                            "Bearer " + res.data.access_token;
+                        this.$axios.defaults.headers.common["X-AUTH"] =
+                            "" + res.data.access_token;
                     }
-                    this.$router.push("/");
-                    // window.location.href = "/";
+                    // this.$router.push("/");
+                    window.location.href = "/";
                 })
                 .catch((res) => {
                     this.$root.notif(res.message, {

@@ -62,7 +62,7 @@ class PelangganController extends ApiController
         ]);
         $params['tanggal_daftar'] = Carbon::now()->format('Y-m-d');
         $data = $this->_model->create($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show($id)
@@ -87,7 +87,7 @@ class PelangganController extends ApiController
             abort(404, ' data not found');
         }
         $data->update($params);
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function destroy($id)

@@ -35,7 +35,7 @@ class PromoController extends ApiController
             $value['id_promo'] = 1;
             PromoDetail::create($value);
         }
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show()

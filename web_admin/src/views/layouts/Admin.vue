@@ -1,6 +1,6 @@
 <template>
     <div class="container body" style="min-height: 100vh">
-        <div  v-if="user && user.name" class="main_container">
+        <div  v-if="user && user.username" class="main_container">
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0">
@@ -27,7 +27,7 @@
                         <div class="profile_info">
                             <span>Welcome,</span>
                             <h2>
-                                {{ this.user ? this.user.name : "" }}
+                                {{ this.user ? this.user.username : "" }}
                             </h2>
                         </div>
                     </div>
@@ -74,30 +74,7 @@
                         
                         <div class="title_right">
                             
-                            <!-- <div
-                                class="
-                                    col-md-5 col-sm-5
-                                    form-group
-                                    pull-right
-                                    top_search
-                                "
-                            >
-                                <div class="input-group">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Search for..."
-                                    />
-                                    <span class="input-group-btn">
-                                        <button
-                                            class="btn btn-default"
-                                            type="button"
-                                        >
-                                            Go!
-                                        </button>
-                                    </span>
-                                </div>
-                            </div> -->
+                            
                         </div>
                        
                     </div>

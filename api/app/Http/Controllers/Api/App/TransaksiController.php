@@ -37,6 +37,12 @@ class TransaksiController extends ApiController
                 });
             });
         }
+        if (@$params['start_date']) {
+            $data = $data->whereDate('tanggal_taransaksi','>=', $params['start_date']);
+        }
+        if (@$params['end_date']) {
+            $data = $data->whereDate('tanggal_taransaksi','<=', $params['end_date']);
+        }
         if (@$params['id_pelanggan']) {
             $data = $data->where('id_pelanggan', $params['id_pelanggan']);
         }
@@ -57,8 +63,10 @@ class TransaksiController extends ApiController
         if (!$this->page) {
             $result = $data->get();
         } else {
+            
             $result = $data->paginate($this->perPage);
         }
+        // return $this->perPage;
         return $this->success(GeneralResource::collection($result)->response()->getData(true));
     }
     public function store(Request $request)
@@ -95,10 +103,10 @@ class TransaksiController extends ApiController
 
         $pelanggan = $data->pelanggan;
         $pelanggan->total_transaksi = $pelanggan->total_transaksi + $subtotal;
-        $pelanggan->toal_poin = $pelanggan->toal_poin + $subtotal_poin;
+        $pelanggan->total_poin = $pelanggan->total_poin + $subtotal_poin;
         $pelanggan->save();
 
-        return $this->success(new GeneralResource($data), 201);
+        return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show($id)

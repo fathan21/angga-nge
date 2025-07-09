@@ -101,7 +101,7 @@ export default {
             password_old: yup.string().required(),
             password_confirmation: yup.string().required(),
             password: !this.$route.params.id
-                ? yup.string().required().min(6)
+                ? yup.string().required().min(5)
                 : yup.string(),
         });
         return {
@@ -128,7 +128,7 @@ export default {
             this.$store.dispatch("loading", true);
 
             let sendData = () => {
-                return this.$axios.post("/change-password", values);
+                return this.$axios.post("/app/change-password", values);
             };
 
             sendData()

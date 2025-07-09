@@ -19,7 +19,7 @@
                             aria-expanded="false"
                         >
                             <img src="/images/img-user.png" alt="" />
-                                {{ this.user ? this.user.name : "" }}
+                                {{ this.user ? this.user.username : "" }}
                         </a>
                         <div
                             class="dropdown-menu dropdown-usermenu pull-right"
@@ -36,8 +36,7 @@
                                 class="dropdown-item"
                                 href="javascript:;"
                                 @click="logout"
-                                ><i class="fa fa-sign-out pull-right"></i> Log
-                                Out</a
+                                ><i class="fa fa-sign-out pull-right"></i> Keluar</a
                             >
                         </div>
                     </li>

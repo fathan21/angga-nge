@@ -47,7 +47,7 @@
                 <li
                   v-for="(child, c) in menu.childs"
                   :key="c"
-                  :class="[ child.route == $route.name  ?'current-page':'' ]"
+                  :class="[child.route == $route.name ? 'current-page' : '']"
                   v-show="cekMenu(child)"
                 >
                   <router-link
@@ -107,15 +107,11 @@
               </ul>
             </li>
           </template>
-        </ul>
-      </div>
-
-      <div class="menu_section">
-        <ul class="nav side-menu" v-if="urlDoc">
           <li>
-            <a :href="urlDoc" target="_blank"
-              ><i class="fa fa-book"></i>
-              Dokumentasi
+            <a @click="logout" class="pointer">
+              <i :class="'fa fa-lock'"></i>
+
+              Keluar
             </a>
           </li>
         </ul>
@@ -137,8 +133,8 @@ export default {
       activeMenu: "dashboard",
       menus: [],
       isMitra: false,
-      urlDoc: '',
-      urlDocOld:'',
+      urlDoc: "",
+      urlDocOld: "",
       notifInterval: null,
     };
   },
@@ -183,10 +179,14 @@ export default {
     clearInterval(this.notifInterval);
   },
   methods: {
+    logout() {
+      this.$router.push({ name: "app.login" });
+      this.$store.dispatch("auth/logout");
+    },
     hideSidebarMobile() {
       var classList = window.document.body.classList;
-      if(classList.contains("nav-md")) {
-          return;
+      if (classList.contains("nav-md")) {
+        return;
       }
       this.menus.forEach((menu1) => {
         menu1.active = false;
@@ -302,16 +302,15 @@ export default {
     initSidebar() {
       this.menus = [];
       if (this.user) {
-        
         this.menus = _nav.admin;
-        this.menus = this.menus.map((menu)=>{
-            if(menu.childs) {
-              var menu1 = menu.childs.map(menu2=>menu2.route);
-              if(menu1.indexOf(this.$route.name) > -1) {
-                  menu.active =  true;
-              }
+        this.menus = this.menus.map((menu) => {
+          if (menu.childs) {
+            var menu1 = menu.childs.map((menu2) => menu2.route);
+            if (menu1.indexOf(this.$route.name) > -1) {
+              menu.active = true;
             }
-            return menu;
+          }
+          return menu;
         });
       }
     },
