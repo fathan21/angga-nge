@@ -127,8 +127,8 @@ export default {
                         this.$axios.defaults.headers.common["X-AUTH"] =
                             "" + res.data.access_token;
                     }
-                    // this.$router.push("/");
-                    window.location.href = "/";
+                    this.$router.push("/");
+                    // window.location.href = "/";
                 })
                 .catch((res) => {
                     this.$root.notif(res.message, {

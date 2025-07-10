@@ -1,4 +1,6 @@
-import { createWebHistory, createRouter } from "vue-router";
+import {  createRouter } from "vue-router";
+// import { createWebHistory } from "vue-router";
+import { createWebHashHistory } from "vue-router";
 import Admin from "@/views/layouts/Admin.vue";
 import Cookies from "../plugins/cookies";
 
@@ -40,7 +42,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  // history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 
