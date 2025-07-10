@@ -1,31 +1,38 @@
 <template>
-  <div class="col-md-12 col-sm-12">
+  <div class="">
     <div class="x_panel">
-      <div class="x_title">
-        
-        <ul class="nav navbar-right panel_toolbox">
-          <li>
-            &nbsp;
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-
       <div class="x_content">
         <div class="table-responsive">
           <div class="row">
             <div class="col-12 col-sm-6 col-md-4">
-              <div class="input-group">
-                <select type="text" class="form-control"  v-model="search.kategori_menu" >
+              <!-- <select  class="form-control"  v-model="search.kategori_menu" >
                   <option value="">Semua Kategori</option>
                   <option v-for="d in cats" :key="d" :value="d" v-text="d"></option>
-                </select>
-              </div>
+                </select> -->
+
+              <select-base
+                :options="
+                  cats.map((v) => {
+                    return {
+                      id: v,
+                      name: v,
+                    };
+                  })
+                "
+                :placeholder="'Semua kategori'"
+                useModel="1"
+                v-model="search.kategori_menu"
+              />
             </div>
             <div class="col-12 col-sm-6 col-md-4">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="cari..." v-model="search.q"
-                  @keyup.enter="searchData" />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="cari..."
+                  v-model="search.q"
+                  @keyup.enter="searchData"
+                />
                 <button class="btn btn-primary" @click="searchData">
                   Cari
                 </button>
@@ -36,24 +43,36 @@
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
                 <div class="">
-                  <div class="col-6 col-md-3 col-lg-3" v-for="m in data" :key="m.id_menu">
-                    <b-card class="mb-2 bg-success text-white">
-                        <div>
-                          {{ m.kategori_menu }}
-                        </div>
-                        <div style="font-size: 16px;">
-                          {{ m.nama_menu }}
-                        </div>
-                        <div class="text-end">
-                          {{ $filters.currency(m.harga) }}
-                          
-                        </div>
+                  <div
+                    class="col-6 col-md-3 col-lg-3"
+                    v-for="m in data"
+                    :key="m.id_menu"
+                  >
+                    <b-card
+                      class="mb-2 bg-success text-white"
+                      style="cursor: pointer"
+                      @click="$emit('setMenu', m)"
+                    >
+                      <div>
+                        {{ m.kategori_menu }}
+                      </div>
+                      <div style="font-size: 16px">
+                        {{ m.nama_menu }}
+                      </div>
+                      <div class="text-end">
+                        {{ $filters.currency(m.harga) }}
+                      </div>
                     </b-card>
                   </div>
                 </div>
               </b-overlay>
             </div>
-          </div><paging-base v-model="options.current_page" :options="options" v-if="data.length > 0" />
+          </div>
+          <paging-base
+            v-model="options.current_page"
+            :options="options"
+            v-if="data.length > 0"
+          />
         </div>
       </div>
     </div>
@@ -74,9 +93,9 @@ export default {
       },
       search: {
         q: "",
-        kategori_menu:""
+        kategori_menu: "",
       },
-      cats:[],
+      cats: [],
       loading: false,
     };
   },
@@ -89,7 +108,9 @@ export default {
       return {
         page: this.options.current_page,
         per_page: this.options.per_page,
-        kategori_menu: this.search.kategori_menu,
+        kategori_menu: this.search.kategori_menu
+          ? this.search.kategori_menu.id
+          : "",
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
       };
@@ -146,7 +167,6 @@ export default {
         .get("/app/menu-cats", { params: this.moreParams })
         .then((res) => {
           this.cats = res.data;
-
         })
         .catch((res) => {
           this.$root.notif(res.message, {
@@ -157,7 +177,7 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    }
+    },
   },
 };
 </script>

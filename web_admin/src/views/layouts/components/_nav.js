@@ -3,7 +3,7 @@ const navAdmin = [
     name: "Data Admin",
     label: "Dashboard",
     icon: "fa fa-home",
-    route: "app",
+    route: "app.dashboard",
   },
   {
     name: "Data Pelanggan",
