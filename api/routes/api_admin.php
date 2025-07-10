@@ -25,6 +25,7 @@ Route::prefix('app')->group(function () {
         Route::post('/change-password', [UserController::class,'changePassword']);
 
         Route::apiResource('/users', UserController::class);
+        Route::get('/menu-cats',[MenuController::class,'cats']);
         Route::apiResource('/menu', MenuController::class);
         Route::apiResource('/pelanggan', PelangganController::class);
         Route::apiResource('/transaksi', TransaksiController::class);

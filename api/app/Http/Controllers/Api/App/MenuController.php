@@ -101,4 +101,11 @@ class MenuController extends ApiController
         }
     }
     
+    public function cats()
+    {
+        $data = Menu::groupBy('kategori_menu')->get()->map(fn($q)=>$q->kategori_menu);
+        // $data=[];
+        return $this->success(new GeneralResource($data));
+    }
+    
 }
