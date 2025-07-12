@@ -17,6 +17,12 @@ const navAdmin = [
     icon: "fa fa-list",
     route: "app.transaksi.list",
   },
+  // {
+  //   name: "Rating",
+  //   label: "Rating",
+  //   icon: "fa fa-star",
+  //   route: "app.transaksi.rating",
+  // },
   {
     name: "Data Menu",
     label: "Data Menu",
@@ -35,6 +41,10 @@ const navAdmin = [
       {
         label: "Laporan Pelanggan Loyal",
         route: "app.laporan.pelanggan",
+      },
+      {
+        label: "Laporan Rating",
+        route: "app.laporan.rating",
       }
     ],
   },

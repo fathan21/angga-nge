@@ -93,6 +93,42 @@
           </div>
         </div>
       </div>
+      <ModalBase v-model="modalRating">
+        <b-card>
+          <div class="row text-center">
+            <div class="col-12">
+              <h1>Rating</h1>
+            </div>
+            <div class="col-12">
+              <h5>Bagaimana dengan pelayanan kami?</h5>
+              <br />
+              <div class="my-2" style="display: flex; justify-content: center">
+                <div style="width: 250px">
+                  <star-rating v-model:rating="rating"></star-rating>
+                </div>
+              </div>
+              <br />
+              <br />
+              <div class="text-end">
+                <button
+                  type="button"
+                  @click="closeRating"
+                  class="btn btn-outline-primary"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  @click="simpanRating"
+                  class="btn btn-primary"
+                >
+                  Kirim
+                </button>
+              </div>
+            </div>
+          </div>
+        </b-card>
+      </ModalBase>
     </div>
   </div>
 </template>
@@ -100,12 +136,17 @@
 <script>
 import format from "date-fns/format";
 import MenuN from "./components/Product.vue";
+import StarRating from "vue-star-rating";
 export default {
   components: {
     MenuN,
+    StarRating,
   },
   data() {
     return {
+      modalRating: false,
+      rating: 0,
+      modalData: {},
       pelanggan: "",
       pelanggans: [],
       details: [],
@@ -123,6 +164,39 @@ export default {
   },
   watch: {},
   methods: {
+    closeRating() {
+      this.modalRating = false;
+    },
+    simpanRating() {
+      if (!this.rating) {
+        this.$root.notif("rating tidak boleh kosong", {
+          type: "error",
+          position: "top",
+        });
+      }
+
+      this.$store.dispatch("loading", true);
+      this.$axios
+        .post("/app/transaksi-rating/" + this.modalData.id_transaksi, {
+          rating: this.rating,
+        })
+        .then(() => {
+          this.$root.notif("terima kasih telah memberikan rating", {
+            type: "info",
+            position: "top",
+          });
+          this.modalRating = false;
+        })
+        .catch((res) => {
+          this.$root.notif(res.message, {
+            type: "error",
+            position: "top",
+          });
+        })
+        .finally(() => {
+          this.$store.dispatch("loading", false);
+        });
+    },
     simpan() {
       if (!this.pelanggan) {
         this.$root.notif("pelanggan tidak boleh kosong", {
@@ -152,13 +226,15 @@ export default {
 
       this.$axios
         .post("/app/transaksi", params)
-        .then(() => {
+        .then((res) => {
           this.$root.notif("data berhasil disimpan", {
             type: "info",
             position: "top",
           });
           this.pelanggan = {};
           this.details = [];
+          this.modalRating = true;
+          this.modalData = res.data;
         })
         .catch((res) => {
           this.$root.notif(res.message, {
@@ -211,3 +287,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.vue-star-rating-rating-text {
+  display: none !important;
+}
+</style>

@@ -86,5 +86,8 @@ export default {
 </script>
 
 <style>
-
+.vue-star-rating-rating-text {
+  display: none !important;
+}
 </style>
+

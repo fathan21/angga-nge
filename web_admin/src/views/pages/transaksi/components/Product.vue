@@ -106,6 +106,7 @@ export default {
   computed: {
     moreParams() {
       return {
+        status:"Aktif",
         page: this.options.current_page,
         per_page: this.options.per_page,
         kategori_menu: this.search.kategori_menu

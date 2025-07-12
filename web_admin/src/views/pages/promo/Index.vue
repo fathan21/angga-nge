@@ -11,25 +11,14 @@
       <div class="x_content">
         <Form
           @submit="onSubmit"
-          :validation-schema="schema"
-          v-slot="{ errors }"
           class=""
         >
           <div class="item form-group">
             <label class="col-form-label col-12 col-md-3 label-align"
-              >Nama Promo <span class="required">*</span>
+              >Nama Promo:
             </label>
             <div class="col-12 col-md-6 col-sm-6">
-              <Field
-                name="nama_promo"
-                class="form-control"
-                v-model="form.nama_promo"
-                :class="[{ 'p-error': errors.nama_promo }]"
-                type="text"
-              />
-              <span class="p-error" v-if="errors.nama_promo">
-                *{{ errors.nama_promo }}
-              </span>
+             <div class="text-bold pt-2">Bonus Poin</div>
             </div>
           </div>
           <div class="item form-group">
@@ -108,13 +97,13 @@
 </template>
 
 <script>
-import { Form, Field } from "vee-validate";
+import { Form } from "vee-validate";
 import * as yup from "yup";
 
 export default {
   components: {
     Form,
-    Field,
+    // Field,
   },
   data() {
     const schema = yup.object({
@@ -124,7 +113,7 @@ export default {
       id: "",
       g_qr: "",
       form: {
-        nama_promo: "",
+        nama_promo: "Bonus Point",
       },
       old: {},
       schema,
@@ -149,7 +138,7 @@ export default {
     },
     reset() {
       this.form = {
-        nama_promo: "",
+        nama_promo: "Bonus Poin",
       };
     },
 
@@ -161,6 +150,7 @@ export default {
           this.old = data;
           // con
           this.form = data;
+          this.form.nama_promo = "Bonus Poin";
           this.details = data.details;
         })
         .catch((res) => {

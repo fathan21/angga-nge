@@ -105,6 +105,9 @@ class TransaksiController extends ApiController
         $pelanggan->total_transaksi = $pelanggan->total_transaksi + $subtotal;
         $pelanggan->total_poin = $pelanggan->total_poin + $subtotal_poin;
         $pelanggan->save();
+        
+        $data->poin = $subtotal_poin;
+        $data->save();
 
         return $this->success(new GeneralResource($data), 'success');
     }
@@ -150,7 +153,17 @@ class TransaksiController extends ApiController
         $data->total = $subtotal;
         $data->save();
 
-        return $this->show($data->id);
+        return $this->show($data->id_transaksi);
+    }
+    
+    public function updateRating(Request $request, $id)
+    {
+        $params = $request->validate([
+            'rating' => 'required'
+        ]);
+        $data = $this->_model->find($id);
+        $data->update($params);
+        return $this->show($data->id_transaksi);
     }
 
     public function destroy($id)

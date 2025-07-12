@@ -2,6 +2,7 @@ import { RouterView } from "vue-router";
 
 const trx = () => import("@/views/pages/laporan/Transaksi.vue");
 const pelanggan = () => import("@/views/pages/laporan/Pelanggan.vue");
+const Rating = () => import("@/views/pages/laporan/Rating.vue");
 const routes = [
   {
     path: "laporan",
@@ -22,6 +23,14 @@ const routes = [
           title: "Laporan Pelanggan Loyal",
         },
         component: pelanggan,
+      },
+      {
+        path: "rating",
+        name: "app.laporan.rating",
+        meta: {
+          title: "Laporan Rating",
+        },
+        component: Rating,
       },
     ],
   },

@@ -4,14 +4,16 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0">
-                        <a
+                        <!-- <a
                             href="javascript:;"
                             @click="$router.push({ name: 'app' })"
                             class="site_title"
-                            ><i class="fa fa-coffee"></i>
+                            >
+                            <img src="Logo_Zonerone.png" style="width: 50px;" />
                             <span class="ps-1"> {{ $appName }}
-                            </span></a
-                        >
+                            </span>
+                            </a
+                        > -->
                     </div>
 
                     <div class="clearfix"></div>
@@ -20,7 +22,7 @@
                     <div class="profile clearfix">
                         <div class="profile_pic">
                             <img
-                                src="/images/logo-.png"
+                                src="/Logo_Zonerone.png"
                                 class="img-circle profile_img"
                             />
                         </div>

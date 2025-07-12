@@ -24,6 +24,7 @@ Route::prefix('app')->group(function () {
         Route::get('/notif', [UserController::class,'info']);
         Route::post('/change-password', [UserController::class,'changePassword']);
 
+        Route::post('/transaksi-rating/{id}',[TransaksiController::class,'updateRating']);
         Route::apiResource('/users', UserController::class);
         Route::get('/menu-cats',[MenuController::class,'cats']);
         Route::apiResource('/menu', MenuController::class);

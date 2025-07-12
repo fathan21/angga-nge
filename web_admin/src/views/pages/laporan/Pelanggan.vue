@@ -107,7 +107,7 @@ export default {
         },
         {
           label: "Total Point",
-          field: "pointotal_poin",
+          field: "total_poin",
           sortable: true,
         }
       ];
