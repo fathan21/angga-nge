@@ -25,10 +25,10 @@ class PromoController extends ApiController
     public function store(Request $request)
     {
         $params = $request->validate([
-            'nama_promo' => 'required',
+            // 'nama_promo' => 'required',
             'details' => 'required|array',
         ]);
-        $data = $this->_model->updateOrCreate(['id_promo'=>1],['nama_promo'=>$params['nama_promo']]);
+        $data = $this->_model->find(1);
 
         $data->details()->delete();
         foreach ($params['details'] as $key => $value) {
