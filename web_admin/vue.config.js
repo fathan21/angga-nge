@@ -1,6 +1,6 @@
 module.exports = {
   productionSourceMap: false,
-  publicPath:"/warkop/",
+  // publicPath:"/warkop/",
   chainWebpack: (config) => {
     config.plugins.delete("preload");
     config.plugins.delete("prefetch");

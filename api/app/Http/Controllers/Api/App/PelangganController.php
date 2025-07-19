@@ -36,6 +36,9 @@ class PelangganController extends ApiController
             $data = $data->where('tanggal_daftar', $params['tanggal_daftar']);
         }
         if ($this->sortField) {
+            if($this->sortField == 'pointotal_poin') {
+                $this->sortField = 'total_poin';
+            }
             $data = $data->orderBy($this->sortField ?: 'nama', $this->sortOrder ?: 'asc');
         }
         return $data;
