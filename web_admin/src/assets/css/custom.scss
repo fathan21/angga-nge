@@ -1,5 +1,5 @@
 .left_col {
-  background: #555879;
+  background: #3D4E57;
 }
 
 .container {
@@ -280,7 +280,7 @@ body .container.body .right_col {
 .nav_title {
   width: 230px;
   float: left;
-  background: #555879;
+  background: #3D4E57;
   border-radius: 0;
   height: 10px;
   padding: 0px;
@@ -357,7 +357,7 @@ body .container.body .right_col {
 }
 
 .green {
-  color: #20bb03;
+  color: #CF27C2;
 }
 
 .aero {
@@ -821,7 +821,7 @@ a:focus {
 
 .nav.side-menu>li.current-page,
 .nav.side-menu>li.active {
-  border-right: 5px solid #20bb03;
+  border-right: 5px solid #CF27C2;
 }
 
 .nav li.current-page {
@@ -839,10 +839,10 @@ a:focus {
 .nav.side-menu>li.active>a {
   text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5b6479), color-stop(100%, #4c5566)), #686e78;
-  background: -webkit-linear-gradient(#334556, #2C4257), #555879;
-  background: -moz-linear-gradient(#334556, #2C4257), #555879;
-  background: -o-linear-gradient(#334556, #2C4257), #555879;
-  background: linear-gradient(#334556, #2C4257), #555879;
+  background: -webkit-linear-gradient(#334556, #2C4257), #3D4E57;
+  background: -moz-linear-gradient(#334556, #2C4257), #3D4E57;
+  background: -o-linear-gradient(#334556, #2C4257), #3D4E57;
+  background: linear-gradient(#334556, #2C4257), #3D4E57;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
   -moz-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
@@ -1899,7 +1899,7 @@ span.right {
   padding: 5px 0 0 0;
   position: fixed;
   width: 230px;
-  background: #555879;
+  background: #3D4E57;
 }
 
 .sidebar-footer a {

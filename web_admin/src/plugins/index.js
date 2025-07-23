@@ -6,13 +6,16 @@ import BootstrapVue3 from "bootstrap-vue-3";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue-3/dist/bootstrap-vue-3.css";
 
-import Toaster from "@meforma/vue-toaster";
+
+import ToastPlugin from 'vue-toast-notification';
+// Import one of the available themes
+import 'vue-toast-notification/dist/theme-default.css';
+// import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 import axios from "./axios";
 import "./vee-validate";
 import VCalendar from "v-calendar";
-import 'v-calendar/dist/style.css';
-import "./vee-validate";
+// import 'v-calendar/dist/style.css';
 import VueCountdown from '@chenfengyuan/vue-countdown';
 
 import "vue-select/dist/vue-select.css";
@@ -52,8 +55,11 @@ const register = (app) => {
 
   /** plugin */
   app.use(BootstrapVue3);
-  app.use(Toaster, {
-    position: "top-right",
+  // app.use(Toaster, {
+  //   position: "top-right",
+  // });
+  app.use(ToastPlugin,{
+    position:'top-right',
   });
   app.use(VCalendar, {});
 

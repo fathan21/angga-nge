@@ -1,4 +1,5 @@
 module.exports = {
+  transpileDependencies: ['birpc','vue-toast-notification'],
   productionSourceMap: false,
   // publicPath:"/warkop/",
   chainWebpack: (config) => {
@@ -25,4 +26,5 @@ module.exports = {
     },
 
   },
+  
 };

@@ -109,7 +109,8 @@ class UserController extends ApiController
         $user = $this->user();
         return $this->success([
             'username'=>$user->username,
-            'id'=>$user->id
+            'id'=>$user->id,
+            'role'=>$user->role,
         ]);
     }
     

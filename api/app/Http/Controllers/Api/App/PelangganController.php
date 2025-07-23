@@ -61,7 +61,8 @@ class PelangganController extends ApiController
         $params = $request->validate([
             'nama' => 'required',
             'no_hp' => 'required',
-            'email' => 'nullable'
+            'email' => 'nullable',
+            'password' => 'required'
         ]);
         $params['tanggal_daftar'] = Carbon::now()->format('Y-m-d');
         $data = $this->_model->create($params);
@@ -82,7 +83,8 @@ class PelangganController extends ApiController
         $params = $request->validate([
             'nama' => 'required',
             'no_hp' => 'required',
-            'email' => 'nullable'
+            'email' => 'nullable',
+            'password' => 'required'
         ]);
         
         $data = $this->_model->find($id);

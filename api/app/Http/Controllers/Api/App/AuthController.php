@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\App;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Api\ApiController;
+use App\Models\Pelanggan;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -20,7 +21,16 @@ class AuthController extends ApiController
         
         $user = User::where('username', $request->get('username'))->first();
         if (!$user) {
-            return $this->error(422, '#4 salah username atau password');
+            $pelanggan = Pelanggan::where('no_hp', $request->get('username'))->first();
+            if(!$pelanggan) {
+                return $this->error(422, '#4 salah username atau password');
+            }
+            $pelanggan->username = $pelanggan->nama;
+            $pelanggan->id = $pelanggan->id_pelanggan;
+            $pelanggan->role = 'pelanggan';
+            $user = $pelanggan;
+        }else {
+            $user->role = 'admin';
         }
 
         $account = ['username' => $user->username, 'password' => $request->get('password')];
@@ -30,7 +40,13 @@ class AuthController extends ApiController
             return $this->error(422, '#5 salah username atau password');
         }
         // dd($user);
-        $tokenDt = $user->id.'_'.random_string(20);
+        if($user->id_pelanggan) {
+            $user->id = $user->id_pelanggan;
+            $tokenDt = 'pelanggan_'.$user->id.'_'.random_string(20);
+        }else{
+            $tokenDt = $user->id.'_'.random_string(20);
+        
+        }
         $token = [
             'access_token' => $tokenDt
         ];

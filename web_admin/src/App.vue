@@ -60,9 +60,10 @@ export default {
   },
   methods: {
     notif(msg, options = {}) {
-      this.$toast.show(msg, {
+      this.$toast.open({
+        message: msg,
         type: options.type || "info",
-        position: options.position || "top-right",
+        position:  "top-right",
       });
     },
     setPageTitle(text) {

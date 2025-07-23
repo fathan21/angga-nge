@@ -78,6 +78,19 @@
             </div>
           </div>
 
+          <div class="item form-group">
+            <label class="col-form-label col-12 col-md-3  label-align" >Password <span
+                class="required">*</span>
+            </label>
+            <div class="col-12  col-md-6 col-sm-6">
+              <Field name="password" class="form-control" v-model="form.password"
+                :class="[{ 'p-error': errors.password }]" type="password" />
+              <span class="p-error" v-if="errors.password">
+                *{{ errors.password }}
+              </span>
+            </div>
+          </div>
+
           <div class="item">
             <div class="col-12 col-md-6 col-sm-6 offset-0 offset-md-3 mt-3">
               <button
@@ -109,6 +122,9 @@ export default {
     const schema = yup.object({
       nama: yup.string().required(),
       no_hp: yup.string().required(),
+      password: !this.$route.params.id
+        ? yup.string().required().min(5)
+        : yup.string(),
     });
     return {
       id: "",
