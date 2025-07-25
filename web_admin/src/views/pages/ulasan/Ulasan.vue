@@ -5,10 +5,7 @@
         
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.promo.form' })">
-              <i class="fa fa-plus" />
-              Tambah
-            </button>
+            &nbsp;
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -58,31 +55,18 @@
                           }}
                         </td>
                         <td>
-                            <a class="btn btn-link btn-sm" style="padding: 0px;" @click="openDetail(user)">
-                              {{ user.nama_promo }}
-                            </a>
+                          {{ user.nama }}
                         </td>
                         <td>
-                          {{ user.deskripsi }}
-                        </td>
-                        <td>
-                          {{ $filters.date(user.periode_mulai) }} - {{ $filters.date(user.periode_akhir) }}
-                        </td>
-                        <td>
-                          
-                          <statusbadge-base :status="user.status">
-                            </statusbadge-base>
+                          {{ $filters.currency(user.total_poin) }}
                         </td>
                         <td style="width: 100px;">
-                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
-                            <i class="fa fa-pencil" />
-                          </button>
-                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
-                            <i class="fa fa-trash" />
-                          </button>
+                          <select class="form-control" v-model="user.status" @change="updateData(user)">
+                            <option value="1">Aktif</option>
+                            <option value="0">Tidak Aktif</option>
+                          </select>
                         </td>
+
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -104,6 +88,9 @@
 
 <script>
 export default {
+  components:{
+    
+  },
   data() {
     return {
       data: [],
@@ -111,8 +98,8 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "nama",
-        order: "asc",
+        sort: "total_poin",
+        order: "desc",
       },
       search: {
         q: "",
@@ -131,23 +118,13 @@ export default {
           sortable: false,
         },
         {
-          label: "Nama Promo",
-          field: "nama_promo",
-          sortable: true,
-        },
-        {
-          label: "Deskripsi",
-          field: "deskrpisi",
+          label: "Nama Pelanggan Loyal",
+          field: "nama",
           sortable: false,
         },
         {
-          label: "Periode",
-          field: "periode",
-          sortable: false,
-        },
-        {
-          label: "Status",
-          field: "status",
+          label: "Score",
+          field: "total_poin",
           sortable: false,
         },
         {
@@ -188,7 +165,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/promo", { params: this.moreParams })
+        .get("/app/pelanggan", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -204,6 +181,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    updateData(user) {
+      this.$axios
+        .put("/app/pelanggan/"+user.id_pelanggan, user )
+        ;
     },
     removeItem(item) {
       let labelStatus = "Hapus Data";
@@ -225,7 +207,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/promo/${user.id_promo}`, params)
+        .delete(`/app/pelanggan/${user.id_pelanggan}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -237,40 +219,11 @@ export default {
           });
         });
     },
-    
-    openDetail(user) {
-        var html = `<table class="table table-striped jambo_table bulk_action table-bordered table-sm">`;
-          html += `
-            <tr>
-              <td>No</td>
-              <td>Menu</td>
-              <td>Discount</td>
-            </tr>
-          `;
-        for (let index = 0; index < user.details.length; index++) {
-          const element = user.details[index];
-          html += `
-            <tr>
-              <td>${index + 1}</td>
-              <td>${element.menu.nama_menu}</td>
-              <td>${element.discount} %</td>
-            </tr>
-          `;
-        }
-        html += `</table>`;
-        this.$swal
-          .fire({
-            width: 500,
-            title: "Detail Promo",
-            html: html,
-          });
-        
-      },
     editItem(item) {
       this.$router.push({
-        name: "app.promo.form",
+        name: "app.pelanggan.form",
         params: {
-          id: item.id_promo,
+          id: item.id_pelanggan,
         },
       });
     },

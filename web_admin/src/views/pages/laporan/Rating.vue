@@ -57,7 +57,7 @@
                     <tbody>
                       <tr v-for="(user, i) in data" :key="i">
                         <td>
-                          {{ $filters.dateTime(user.tanggal_taransaksi) }}
+                          {{ $filters.dateTime(user.tanggal_transaksi) }}
                         </td>
                         <td>
                           {{ user.pelanggan ? user.pelanggan.nama : "" }}
@@ -146,7 +146,7 @@ export default {
       return [
         {
           label: "Tanggal",
-          field: "tanggal_taransaksi",
+          field: "tanggal_transaksi",
           sortable: true,
         },
         {

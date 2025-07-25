@@ -17,4 +17,9 @@ class PromoDetail extends Model
     {
         return $this->hasOne(Promo::class,'id_promo','id_promo');
     }
+
+    public function menu()
+    {
+        return $this->hasOne(Menu::class,'id_menu','id_menu');
+    }
 }

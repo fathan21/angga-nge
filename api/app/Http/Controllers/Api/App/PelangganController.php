@@ -91,6 +91,10 @@ class PelangganController extends ApiController
         if (!$data) {
             abort(404, ' data not found');
         }
+        $paramsAll =$request->all();
+        if(isset($paramsAll['status'])) {
+            $params['status'] = $paramsAll['status'];
+        }
         $data->update($params);
         return $this->success(new GeneralResource($data), 'success');
     }

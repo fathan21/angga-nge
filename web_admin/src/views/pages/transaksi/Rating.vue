@@ -100,7 +100,7 @@ export default {
         return;
       }
       var params = {
-        tanggal_taransaksi: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        tanggal_transaksi: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
         id_pelanggan: this.pelanggan.id,
         details: this.details.map((v) => {
           return {

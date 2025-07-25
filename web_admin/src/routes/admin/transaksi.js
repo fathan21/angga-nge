@@ -6,6 +6,8 @@ const Index = () =>
     import(/* webpackChunkName: "transaksi-form" */ "@/views/pages/transaksi/Form.vue");
   const Rating = () =>
     import(/* webpackChunkName: "Rating-form" */ "@/views/pages/transaksi/Rating.vue");
+  const Transaksi = () =>
+    import(/* webpackChunkName: "Rating-form" */ "@/views/pages/transaksi/Pesanan.vue");
 const routes = [
   {
     path: "transaksi",
@@ -34,6 +36,14 @@ const routes = [
           title: "Rating",
         },
         component: Rating,
+      },
+      {
+        path: "pesanan",
+        name: "app.transaksi.pesanan",
+        meta: {
+          title: "Daftar Pesanan",
+        },
+        component: Transaksi,
       },
     ],
   },

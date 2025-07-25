@@ -213,7 +213,7 @@ export default {
         return;
       }
       var params = {
-        tanggal_taransaksi: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+        tanggal_transaksi: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
         id_pelanggan: this.pelanggan.id,
         details: this.details.map((v) => {
           return {
@@ -226,15 +226,15 @@ export default {
 
       this.$axios
         .post("/app/transaksi", params)
-        .then((res) => {
+        .then(() => {
           this.$root.notif("data berhasil disimpan", {
             type: "info",
             position: "top",
           });
           this.pelanggan = {};
           this.details = [];
-          this.modalRating = true;
-          this.modalData = res.data;
+          // this.modalRating = true;
+          // this.modalData = res.data;
         })
         .catch((res) => {
           this.$root.notif(res.message, {

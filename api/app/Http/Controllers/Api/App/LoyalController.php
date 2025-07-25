@@ -4,19 +4,17 @@ namespace App\Http\Controllers\Api\App;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\GeneralResource;
+use App\Models\Loyal;
 use App\Models\Menu;
-use App\Models\Promo;
-use App\Models\PromoDetail;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class PromoController extends ApiController
+class LoyalController extends ApiController
 {
     private $_model;
 
-    public function __construct(Promo $md, Request $request)
+    public function __construct(Loyal $md, Request $request)
     {
         $this->_model = $md;
 
@@ -28,18 +26,24 @@ class PromoController extends ApiController
         if ($this->search) {
             $search = $this->search;
             $data = $data->where(function ($query) use ($search) {
-                $query->where('nama_promo', 'like', '%' . $search . '%');
+                $query->where('nama_menu', 'like', '%' . $search . '%');
             });
+        }
+        if (@$params['status']) {
+            $data = $data->where('status', $params['status']);
+        }
+        if (@$params['kategori_menu']) {
+            $data = $data->where('kategori_menu', $params['kategori_menu']);
+        }
+        if ($this->sortField) {
+            $data = $data->orderBy($this->sortField ?: 'nama_menu', $this->sortOrder ?: 'asc');
         }
         return $data;
     }
 
     public function index(Request $request)
     {
-        Promo::where('status', 'aktif')
-            ->whereDate('periode_akhir', '<', Carbon::now()->format('Y-m-d'))
-            ->update(['status' => 'nonaktif']);
-        $data = $this->_model->with(['details.menu']);
+        $data = $this->_model;
         $data = $this->scopeQuery($data, $request->all());
 
         if (!$this->page) {
@@ -51,30 +55,14 @@ class PromoController extends ApiController
     }
     public function store(Request $request)
     {
-        $params = $request->validate([
-            'nama_promo' => 'required',
-            'periode_mulai' => 'required',
-            'periode_akhir' => 'required',
-            'deskripsi' => 'nullable',
-        ]);
-        $paramsAll = $request->validate([
-            'details' => 'required',
-        ]);
-        $paramsAll = $request->all();
-        $params['status'] = 'aktif';
+        $params = $request->all();
         $data = $this->_model->create($params);
-
-        foreach ($paramsAll['details'] as $key => $value) {
-            $value['id_promo'] = $data->id_promo;
-            PromoDetail::create($value);
-        }
-
         return $this->success(new GeneralResource($data), 'success');
     }
 
     public function show($id)
     {
-        $data = $this->_model->with(['details.menu'])->find($id);
+        $data = $this->_model->find($id);
         if (!$data) {
             abort(404, ' data not found');
         }
@@ -83,27 +71,14 @@ class PromoController extends ApiController
 
     public function update(Request $request, $id)
     {
-        $params = $request->validate([
-            'nama_promo' => 'required',
-            'periode_mulai' => 'required',
-            'periode_akhir' => 'required',
-            'deskripsi' => 'nullable',
-        ]);
-        $paramsAll = $request->validate([
-            'details' => 'required',
-        ]);
-        
+        $params = [
+            'poin'=>$request->input('poin', 0),
+        ];
         $data = $this->_model->find($id);
         if (!$data) {
             abort(404, ' data not found');
         }
-        $params['status'] = 'aktif';
         $data->update($params);
-        PromoDetail::where('id_promo', $data->id_promo)->delete();
-        foreach ($paramsAll['details'] as $key => $value) {
-            $value['id_promo'] = $data->id_promo;
-            PromoDetail::create($value);
-        }
         return $this->success(new GeneralResource($data), 'success');
     }
 
@@ -114,8 +89,7 @@ class PromoController extends ApiController
             $data->delete();
             return $this->success('sucess', 204);
         } catch (\Throwable $th) {
-            return $this->error(400,'error :' . $th->getMessage());
+            return $this->error(400, 'error :' . $th->getMessage());
         }
     }
-    
 }

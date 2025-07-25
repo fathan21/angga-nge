@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\App\AuthController;
+use App\Http\Controllers\Api\App\LoyalController;
 use App\Http\Controllers\Api\App\MenuController;
 use App\Http\Controllers\Api\App\PelangganController;
 use App\Http\Controllers\Api\App\PromoController;
@@ -28,11 +29,11 @@ Route::prefix('app')->group(function () {
         Route::apiResource('/users', UserController::class);
         Route::get('/menu-cats',[MenuController::class,'cats']);
         Route::apiResource('/menu', MenuController::class);
+        Route::apiResource('/loyal', LoyalController::class);
         Route::apiResource('/pelanggan', PelangganController::class);
         Route::apiResource('/transaksi', TransaksiController::class);
-        
-        Route::get('/promo', [PromoController::class,'show']);
-        Route::post('/promo', [PromoController::class,'store']);
+        Route::apiResource('/promo', PromoController::class);
+       
         
     });
 });

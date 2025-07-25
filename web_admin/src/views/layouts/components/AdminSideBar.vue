@@ -302,7 +302,7 @@ export default {
     initSidebar() {
       this.menus = [];
       if (this.user) {
-        this.menus = _nav.admin;
+        this.menus = this.user.role == 'admin'? _nav.admin :_nav.pl;
         this.menus = this.menus.map((menu) => {
           if (menu.childs) {
             var menu1 = menu.childs.map((menu2) => menu2.route);

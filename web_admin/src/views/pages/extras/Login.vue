@@ -72,7 +72,7 @@
                                         type="submit"
                                         class="
                                             form-control
-                                            btn btn-danger
+                                            btn btn-primary
                                             rounded
                                             submit
                                             px-3

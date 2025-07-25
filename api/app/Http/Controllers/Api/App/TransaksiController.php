@@ -31,17 +31,14 @@ class TransaksiController extends ApiController
         if ($this->search) {
             $search = $this->search;
             $data = $data->where(function ($query) use ($search) {
-                $query->where('id', 'like', '%' . $search . '%');
-                $query->whereHas('pelanggan', function ($q) use ($search) {
-                    $q->where('nama', 'like', '%' . $search . '%');
-                });
+                $query->where('id_transaksi', 'like', '%' . $search . '%');
             });
         }
         if (@$params['start_date']) {
-            $data = $data->whereDate('tanggal_taransaksi','>=', $params['start_date']);
+            $data = $data->whereDate('tanggal_transaksi','>=', $params['start_date']);
         }
         if (@$params['end_date']) {
-            $data = $data->whereDate('tanggal_taransaksi','<=', $params['end_date']);
+            $data = $data->whereDate('tanggal_transaksi','<=', $params['end_date']);
         }
         if (@$params['id_pelanggan']) {
             $data = $data->where('id_pelanggan', $params['id_pelanggan']);
@@ -59,7 +56,7 @@ class TransaksiController extends ApiController
     {
         $data = $this->_model;
         $data = $this->scopeQuery($data, $request->all());
-        $data = $data->with(['details', 'admin', 'pelanggan']);
+        $data = $data->with(['details.menu', 'admin', 'pelanggan']);
         if (!$this->page) {
             $result = $data->get();
         } else {
@@ -72,10 +69,11 @@ class TransaksiController extends ApiController
     public function store(Request $request)
     {
         $params = $request->validate([
-            'tanggal_taransaksi' => 'required',
+            'tanggal_transaksi' => 'required',
             'id_pelanggan' => 'required'
         ]);
-        $params['tanggal_taransaksi'] = Carbon::now();
+        $params['status'] = 'dipesan';
+        $params['tanggal_transaksi'] = Carbon::now();
         $paramsAll = $request->validate([
             'details' => 'required|array'
         ]);
@@ -95,18 +93,18 @@ class TransaksiController extends ApiController
         $data->total = $subtotal;
         $data->save();
 
-        $promo = PromoDetail::where('min_trx', '<=', $subtotal)->where('max_trx', '>=', $subtotal)->first();
-        // dd($promo);
-        if ($promo) {
-            $subtotal_poin = $promo->poin;
-        }
+        // $promo = PromoDetail::where('min_trx', '<=', $subtotal)->where('max_trx', '>=', $subtotal)->first();
+        // // dd($promo);
+        // if ($promo) {
+        //     $subtotal_poin = $promo->poin;
+        // }
 
-        $pelanggan = $data->pelanggan;
-        $pelanggan->total_transaksi = $pelanggan->total_transaksi + $subtotal;
-        $pelanggan->total_poin = $pelanggan->total_poin + $subtotal_poin;
-        $pelanggan->save();
+        // $pelanggan = $data->pelanggan;
+        // $pelanggan->total_transaksi = $pelanggan->total_transaksi + $subtotal;
+        // $pelanggan->total_poin = $pelanggan->total_poin + $subtotal_poin;
+        // $pelanggan->save();
         
-        $data->poin = $subtotal_poin;
+        // $data->poin = $subtotal_poin;
         $data->save();
 
         return $this->success(new GeneralResource($data), 'success');
@@ -124,8 +122,9 @@ class TransaksiController extends ApiController
     public function update(Request $request, $id)
     {
         $params = $request->validate([
-            'tanggal_taransaksi' => 'required',
-            'id_pelanggan' => 'required'
+            'tanggal_transaksi' => 'required',
+            'id_pelanggan' => 'required',
+            'status' => 'nullable'
         ]);
 
         $paramsAll = $request->validate([

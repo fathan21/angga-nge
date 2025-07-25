@@ -32,7 +32,7 @@ return new class extends Migration
             $table->integerIncrements('id_transaksi');
             $table->integer('id_admin');
             $table->integer('id_pelanggan');
-            $table->dateTime('tanggal_taransaksi');
+            $table->dateTime('tanggal_transaksi');
             $table->double('total', 10,2);
             $table->integer('poin')->nullable()->comment('point');
         });

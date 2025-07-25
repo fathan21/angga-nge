@@ -56,7 +56,7 @@
                       <div>
                         {{ m.kategori_menu }}
                       </div>
-                      <div style="font-size: 16px">
+                      <div style="font-size: 16px;font-size: 16px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
                         {{ m.nama_menu }}
                       </div>
                       <div class="text-end">

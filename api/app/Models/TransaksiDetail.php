@@ -11,5 +11,10 @@ class TransaksiDetail extends Model
     protected $primaryKey = 'id_detail';
     public $timestamps = false;
 
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class, 'id_menu', 'id_menu');
+    }
+
     
 }

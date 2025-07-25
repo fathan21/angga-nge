@@ -5,10 +5,7 @@
         
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.promo.form' })">
-              <i class="fa fa-plus" />
-              Tambah
-            </button>
+            &nbsp;
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -16,17 +13,7 @@
 
       <div class="x_content">
         <div class="table-responsive">
-          <div class="row">
-            <div class="col-12 col-sm-6 col-md-4">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="cari..." v-model="search.q"
-                  @keyup.enter="searchData" />
-                <button class="btn btn-primary" @click="searchData">
-                  Cari
-                </button>
-              </div>
-            </div>
-          </div>
+          
           <div class="row">
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
@@ -58,31 +45,12 @@
                           }}
                         </td>
                         <td>
-                            <a class="btn btn-link btn-sm" style="padding: 0px;" @click="openDetail(user)">
-                              {{ user.nama_promo }}
-                            </a>
+                          {{ user.nama }}
                         </td>
-                        <td>
-                          {{ user.deskripsi }}
+                        <td style="width: 150px;">
+                          <input type="number" class="form-control" @change="updateData(user)" v-model="user.poin" />
                         </td>
-                        <td>
-                          {{ $filters.date(user.periode_mulai) }} - {{ $filters.date(user.periode_akhir) }}
-                        </td>
-                        <td>
-                          
-                          <statusbadge-base :status="user.status">
-                            </statusbadge-base>
-                        </td>
-                        <td style="width: 100px;">
-                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
-                            <i class="fa fa-pencil" />
-                          </button>
-                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
-                            <i class="fa fa-trash" />
-                          </button>
-                        </td>
+
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -95,7 +63,7 @@
                 </div>
               </b-overlay>
             </div>
-          </div><paging-base v-model="options.current_page" :options="options" v-if="data.length > 0" />
+          </div>
         </div>
       </div>
     </div>
@@ -104,6 +72,9 @@
 
 <script>
 export default {
+  components:{
+    
+  },
   data() {
     return {
       data: [],
@@ -111,7 +82,7 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "nama",
+        sort: "id",
         order: "asc",
       },
       search: {
@@ -131,29 +102,15 @@ export default {
           sortable: false,
         },
         {
-          label: "Nama Promo",
-          field: "nama_promo",
-          sortable: true,
-        },
-        {
-          label: "Deskripsi",
-          field: "deskrpisi",
+          label: "Parameter Loyalitas",
+          field: "nama",
           sortable: false,
         },
         {
-          label: "Periode",
-          field: "periode",
+          label: "Score",
+          field: "total_poin",
           sortable: false,
-        },
-        {
-          label: "Status",
-          field: "status",
-          sortable: false,
-        },
-        {
-          label: "Action",
-          sortable: false,
-        },
+        }
       ];
     },
     moreParams() {
@@ -188,7 +145,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/promo", { params: this.moreParams })
+        .get("/app/loyal", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -204,6 +161,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    updateData(user) {
+      this.$axios
+        .put("/app/loyal/"+user.id, user )
+        ;
     },
     removeItem(item) {
       let labelStatus = "Hapus Data";
@@ -225,7 +187,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/promo/${user.id_promo}`, params)
+        .delete(`/app/loyal/${user.id_loyal}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -237,40 +199,11 @@ export default {
           });
         });
     },
-    
-    openDetail(user) {
-        var html = `<table class="table table-striped jambo_table bulk_action table-bordered table-sm">`;
-          html += `
-            <tr>
-              <td>No</td>
-              <td>Menu</td>
-              <td>Discount</td>
-            </tr>
-          `;
-        for (let index = 0; index < user.details.length; index++) {
-          const element = user.details[index];
-          html += `
-            <tr>
-              <td>${index + 1}</td>
-              <td>${element.menu.nama_menu}</td>
-              <td>${element.discount} %</td>
-            </tr>
-          `;
-        }
-        html += `</table>`;
-        this.$swal
-          .fire({
-            width: 500,
-            title: "Detail Promo",
-            html: html,
-          });
-        
-      },
     editItem(item) {
       this.$router.push({
-        name: "app.promo.form",
+        name: "app.loyal.form",
         params: {
-          id: item.id_promo,
+          id: item.id_loyal,
         },
       });
     },

@@ -51,6 +51,7 @@ export default {
           case "CANCELLED":
           case "FAILED":
           case "close":
+          case "nonaktif":
             badgeColor = "bg-danger";
             return badgeColor;
           case "expired":
@@ -79,6 +80,7 @@ export default {
         case "CANCELLED":
         case "close":
         case "Deactive":
+        case "nonaktif":
           badgeColor = "bg-danger";
           return badgeColor;
       }

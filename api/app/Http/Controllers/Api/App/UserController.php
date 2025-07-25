@@ -122,7 +122,13 @@ class UserController extends ApiController
             'password_confirmation' => 'required'
         ]);
         $data = auth_user();
-        $data->update(['password'=>$params['password']]);
+        if($data instanceof Pelanggan) {
+            $data = Pelanggan::find($data->id_pelanggan);
+        }else{
+            $data = User::find($data->id);
+        }
+        $data->password = $params['password'];
+        $data->save();
         return $this->success(new GeneralResource($data), 'success');
     }
     
@@ -131,7 +137,7 @@ class UserController extends ApiController
         $now= Carbon::now()->format('Y-m-d');
         $data = [
             'total_pelanggan'=>Pelanggan::count(),
-            'total_trx_hari_ini'=>Transaksi::whereDate('tanggal_taransaksi',$now)->count(),
+            'total_trx_hari_ini'=>Transaksi::whereDate('tanggal_transaksi',$now)->count(),
             'total_pemasukan'=>Transaksi::sum('total'),
         ];
         return $this->success($data);

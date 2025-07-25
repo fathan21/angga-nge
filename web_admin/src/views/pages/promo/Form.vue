@@ -19,27 +19,104 @@
         <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }" class="">
           
           <div class="item form-group">
-            <label class="col-form-label col-12 col-md-3  label-align" >Username <span
+            <label class="col-form-label col-12 col-md-3  label-align" >Nama <span
                 class="required">*</span>
             </label>
             <div class="col-12  col-md-6 col-sm-6">
-              <Field name="username" class="form-control" v-model="form.username" :class="[{ 'p-error': errors.username }]"
+              <Field name="nama_promo" class="form-control" v-model="form.nama_promo" :class="[{ 'p-error': errors.nama_promo }]"
                 type="text" />
-              <span class="p-error" v-if="errors.username">
-                *{{ errors.username }}
+              <span class="p-error" v-if="errors.nama_promo">
+                *{{ errors.nama_promo }}
               </span>
             </div>
           </div>
           <div class="item form-group">
-            <label class="col-form-label col-12 col-md-3  label-align" >Password <span
+            <label class="col-form-label col-12 col-md-3  label-align" >Deskripsi <span
                 class="required">*</span>
             </label>
             <div class="col-12  col-md-6 col-sm-6">
-              <Field name="password" class="form-control" v-model="form.password"
-                :class="[{ 'p-error': errors.password }]" type="password" />
-              <span class="p-error" v-if="errors.password">
-                *{{ errors.password }}
-              </span>
+              <Field name="deskripsi" class="form-control" v-model="form.deskripsi" />
+            </div>
+          </div>
+          <div class="item form-group">
+            <label class="col-form-label col-12 col-md-3  label-align" >Periode Mulai <span
+                class="required">*</span>
+            </label>
+            <div class="col-12  col-md-6 col-sm-6">
+              <Field name="periode_mulai" type="date" class="form-control" v-model="form.periode_mulai" />
+            </div>
+          </div>
+          <div class="item form-group">
+            <label class="col-form-label col-12 col-md-3  label-align" >Periode Akhir <span
+                class="required">*</span>
+            </label>
+            <div class="col-12  col-md-6 col-sm-6">
+              <Field name="periode_akhir" type="date" class="form-control" v-model="form.periode_akhir" />
+            </div>
+          </div>
+
+          <div class="item form-group">
+            <label class="col-form-label col-12 col-md-3 label-align"
+              >&nbsp;
+            </label>
+            <div class="col-12 col-md-6 col-sm-6">
+              <div>
+                <button
+                  class="btn btn-outline-primary btn-sm mb-2"
+                  type="button"
+                  @click="addItem"
+                >
+                  Tambah
+                </button>
+                <table class="table table-sm table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Menu</th>
+                      <th>Discount (%)</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(d, i) in details" :key="i">
+                      <td>
+                        {{ i+1 }}
+                      </td>
+                      <td>
+                        <select
+                          class="form-select"
+                          v-model="d.id_menu"
+                        >
+                          <option value="">Pilih Menu</option>
+                          <option
+                            v-for="menu in menus"
+                            :key="menu.id_menu"
+                            :value="menu.id_menu"
+                          >
+                            {{ menu.nama_menu }}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          class="form-control"
+                          v-model="d.discount"
+                          type="number"
+                        />
+                      </td>
+                      <td>
+                        <button
+                          class="btn btn-sm btn-danger"
+                          type="button"
+                          @click="removeItem(i)"
+                        >
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
           
@@ -68,24 +145,19 @@ export default {
   },
   data() {
     const schema = yup.object({
-      username: yup.string().required(),
-      password: !this.$route.params.id
-        ? yup.string().required().min(5)
-        : yup.string(),
+      nama_promo: yup.string().required(),
     });
     return {
       id: "",
       g_qr: "",
       form: {
-        username: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: "",
+        nama_promo: "",
       },
       old: {},
       schema,
+      details:[],
       roles: [],
+      menus:[],
     };
   },
   computed: {
@@ -97,6 +169,12 @@ export default {
     },
   },
   methods: {
+    addItem() {
+      this.details.push({});
+    },
+    removeItem(i) {
+      this.details.splice(i, 1);
+    },
     reset() {
       this.form = {
         username: "",
@@ -109,12 +187,13 @@ export default {
 
     loadData() {
       this.$axios
-        .get(`/app/users/${this.id}`)
+        .get(`/app/promo/${this.id}`)
         .then((res) => {
           let data = Object.assign({}, res.data);
           this.old = data;
           // con
           this.form = data;
+          this.details = data.details;
         })
         .catch((res) => {
           this.$root.notif(res.message, {
@@ -124,22 +203,37 @@ export default {
         })
         .finally(() => { });
     },
+    loadMenu() {
+      this.$axios
+        .get(`/app/menu`)
+        .then((res) => {
+          let data = Object.assign({}, res.data.data);
+          this.menus = data;
+        })
+        ;
+    },
 
     onSubmit(values) {
+      values.details = this.details.map(v=>{
+        return {
+          discount: v.discount,
+          id_menu: v.id_menu,
+        }
+      });
       this.$store.dispatch("loading", true);
       let sendData = () => {
-        return this.$axios.post("/app/users", values);
+        return this.$axios.post("/app/promo", values);
       };
 
       if (this.id) {
         sendData = () => {
-          return this.$axios.put(`/app/users/${this.id}`, values);
+          return this.$axios.put(`/app/promo/${this.id}`, values);
         };
       }
       sendData()
         .then((res) => {
           this.$router.push({
-            name: "app.users.list",
+            name: "app.promo.list",
           });
           this.$root.notif(res.message);
         })
@@ -156,6 +250,7 @@ export default {
   },
 
   mounted() {
+    this.loadMenu();
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       this.loadData();

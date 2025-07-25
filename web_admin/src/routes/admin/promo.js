@@ -19,7 +19,7 @@ const routes = [
       },
       {
         path: "form/:id?/:action?",
-        name: "app.users.form",
+        name: "app.promo.form",
         meta: {
           title: "Promo Form",
         },
