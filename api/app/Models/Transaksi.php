@@ -25,5 +25,10 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
+
+    public function ulasan()
+    {
+        return $this->belongsTo(Ulasan::class, 'id_transaksi', 'id_transaksi')->whereNull('id_menu');
+    }
     
 }

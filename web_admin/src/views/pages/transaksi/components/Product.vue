@@ -60,7 +60,15 @@
                         {{ m.nama_menu }}
                       </div>
                       <div class="text-end">
+                        <span v-if="m.promo" style="    font-size: 10px;text-decoration: line-through;">
+                          {{ $filters.currency(m.promo.harga_awal) }}
+                        </span>
                         {{ $filters.currency(m.harga) }}
+                      </div>
+                      <div>
+                        <div style="display: flex;justify-content: center;">                              
+                                <StarRating read-only :star-size="20" :rating="m.rating" />
+                            </div>
                       </div>
                     </b-card>
                   </div>
@@ -80,7 +88,11 @@
 </template>
 
 <script>
+  import StarRating from "vue-star-rating";
 export default {
+  components: {
+    StarRating,
+  },
   data() {
     return {
       data: [],

@@ -1,4 +1,5 @@
 import Login from "@/views/pages/extras/Login.vue";
+import Register from "@/views/pages/extras/Register.vue";
 import ForgotPassword from "@/views/pages/extras/ForgotPassword";
 import ForgotPasswordChange from "@/views/pages/extras/ForgotPasswordChange";
 const routes = [
@@ -9,6 +10,14 @@ const routes = [
       title: "Admin",
     },
     component: Login
+  },
+  {
+    path: "/register",
+    name: "register",
+    meta: {
+      title: "Admin",
+    },
+    component: Register
   },
   {
     path: "/forgot-password",

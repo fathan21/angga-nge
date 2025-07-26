@@ -137,8 +137,8 @@ class UserController extends ApiController
         $now= Carbon::now()->format('Y-m-d');
         $data = [
             'total_pelanggan'=>Pelanggan::count(),
-            'total_trx_hari_ini'=>Transaksi::whereDate('tanggal_transaksi',$now)->count(),
-            'total_pemasukan'=>Transaksi::sum('total'),
+            'total_trx_hari_ini'=>Transaksi::where('status','selesai')->whereDate('tanggal_transaksi',$now)->count(),
+            'total_pemasukan'=>Transaksi::where('status','selesai')->sum('total'),
         ];
         return $this->success($data);
     }

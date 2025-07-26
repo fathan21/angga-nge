@@ -2,10 +2,13 @@
   <div class="col-md-12 col-sm-12">
     <div class="x_panel">
       <div class="x_title">
-        
+
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            &nbsp;
+            <button class="btn btn-sm btn-primary" type="button" @click="addItem()">
+              <i class="fa fa-plus" />
+              Tambah
+            </button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -13,7 +16,7 @@
 
       <div class="x_content">
         <div class="table-responsive">
-          
+
           <div class="row">
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
@@ -45,10 +48,20 @@
                           }}
                         </td>
                         <td>
-                          {{ user.nama }}
+                          {{ user.pertanyaan }}
                         </td>
-                        <td style="width: 150px;">
-                          <input type="number" class="form-control" @change="updateData(user)" v-model="user.poin" />
+                        <!-- <td style="width: 150px;">
+                          {{ user.tipe }}
+                        </td> -->
+                        <td style="width: 100px;">
+                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
+                            <i class="fa fa-pencil" />
+                          </button>
+                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
+                            <i class="fa fa-trash" />
+                          </button>
                         </td>
 
                       </tr>
@@ -72,8 +85,8 @@
 
 <script>
 export default {
-  components:{
-    
+  components: {
+
   },
   data() {
     return {
@@ -102,15 +115,19 @@ export default {
           sortable: false,
         },
         {
-          label: "Parameter Loyalitas",
+          label: "Pertanyaan",
           field: "nama",
           sortable: false,
         },
+        // {
+        //   label: "Tipe",
+        //   field: "tipe",
+        //   sortable: false,
+        // },
         {
-          label: "Score",
-          field: "total_poin",
+          label: "Action",
           sortable: false,
-        }
+        },
       ];
     },
     moreParams() {
@@ -145,7 +162,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/loyal", { params: this.moreParams })
+        .get("/app/ulasan-pertanyaan", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -164,7 +181,7 @@ export default {
     },
     updateData(user) {
       this.$axios
-        .put("/app/loyal/"+user.id, user )
+        .put("/app/loyal/" + user.id, user)
         ;
     },
     removeItem(item) {
@@ -187,7 +204,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/loyal/${user.id_loyal}`, params)
+        .delete(`/app/ulasan-pertanyaan/${user.id}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -200,12 +217,109 @@ export default {
         });
     },
     editItem(item) {
-      this.$router.push({
-        name: "app.loyal.form",
-        params: {
-          id: item.id_loyal,
-        },
-      });
+      
+
+      this.$swal
+        .fire({
+          width: 350,
+          title: "Tambah Ulasan",
+          focusConfirm: false,
+          html: `
+            <div class="text-start">
+              Pertanyaan
+            </div>
+            <input value="${item.pertanyaan}" id="swal-pertanyaan" class="form-control mb-2" placeholder="Pertanyaan">
+          `,
+          showCancelButton: true,
+          preConfirm: () => {
+            return [
+              document.getElementById("swal-pertanyaan").value,
+            ];
+          },
+          confirmButtonText: "Simpan",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            if (result.value) {
+              let pertanyaan = result.value[0];
+              let tipe = result.value[1];
+              if (pertanyaan) {
+                this.$axios
+                  .put("/app/ulasan-pertanyaan/" + item.id, {
+                    pertanyaan: pertanyaan,
+                    tipe: tipe,
+                  })
+                  .then((res) => {
+                    this.$root.notif(res.message);
+                    this.loadData();
+                  })
+                  .catch((res) => {
+                    this.$root.notif(res.message, {
+                      type: "error",
+                      position: "top",
+                    });
+                  });
+              } else {
+                this.$root.notif("Semua field harus diisi", {
+                  type: "error",
+                  position: "top",
+                });
+              }
+            }
+          }
+        });
+
+    },
+    addItem() {
+      this.$swal
+        .fire({
+          width: 350,
+          title: "Tambah Ulasan",
+          focusConfirm: false,
+          html: `
+            <div class="text-start">
+              Pertanyaan
+            </div>
+            <input id="swal-pertanyaan" class="form-control mb-2" placeholder="Pertanyaan">
+          `,
+          showCancelButton: true,
+          preConfirm: () => {
+            return [
+              document.getElementById("swal-pertanyaan").value
+            ];
+          },
+          confirmButtonText: "Simpan",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            if (result.value) {
+              let pertanyaan = result.value[0];
+              let tipe = result.value[1];
+              if (pertanyaan) {
+                this.$axios
+                  .post("/app/ulasan-pertanyaan", {
+                    pertanyaan: pertanyaan,
+                    tipe: tipe,
+                  })
+                  .then((res) => {
+                    this.$root.notif(res.message);
+                    this.loadData();
+                  })
+                  .catch((res) => {
+                    this.$root.notif(res.message, {
+                      type: "error",
+                      position: "top",
+                    });
+                  });
+              } else {
+                this.$root.notif("Semua field harus diisi", {
+                  type: "error",
+                  position: "top",
+                });
+              }
+            }
+          }
+        });
     },
   },
 };

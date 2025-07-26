@@ -4,19 +4,18 @@ namespace App\Http\Controllers\Api\App;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\GeneralResource;
-use App\Models\Loyal;
 use App\Models\Menu;
-use App\Models\Pelanggan;
+use App\Models\Ulasan;
+use App\Models\UlasanPertanyaan;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class PelangganController extends ApiController
+class UlasanController extends ApiController
 {
     private $_model;
 
-    public function __construct(Pelanggan $md, Request $request)
+    public function __construct(Ulasan $md, Request $request)
     {
         $this->_model = $md;
 
@@ -25,35 +24,25 @@ class PelangganController extends ApiController
 
     public function scopeQuery($data, $params = [])
     {
-        if ($this->search) {
-            $search = $this->search;
-            $data = $data->where(function ($query) use ($search) {
-                $query->where('nama', 'like', '%' . $search . '%');
-                $query->where('no_hp', 'like', '%' . $search . '%');
-                $query->orWhere('email', 'like', '%' . $search . '%');
+        
+        if(@$params['tipe']) {
+            $data = $data->where('tipe', $params['tipe']);
+        }
+
+        if(@$params['id_pelanggan']) {
+            $data = $data->whereHas('transaksi.pelanggan', function($query) use ($params) {
+                $query->where('id_pelanggan', $params['id_pelanggan']);
             });
         }
-        if(@$params['tanggal_daftar']) {
-            $data = $data->where('tanggal_daftar', $params['tanggal_daftar']);
-        }
-        if(@$params['with_param']) {
-            $minPoin = Loyal::find(4)->poin;
-            $data = $data->where('total_poin','>=', $minPoin)
-            ->where('status', 1);
-            ;
-        }
         if ($this->sortField) {
-            if($this->sortField == 'pointotal_poin') {
-                $this->sortField = 'total_poin';
-            }
-            $data = $data->orderBy($this->sortField ?: 'nama', $this->sortOrder ?: 'asc');
+            $data = $data->orderBy($this->sortField ?: 'nama_menu', $this->sortOrder ?: 'asc');
         }
         return $data;
     }
 
     public function index(Request $request)
     {
-        $data = $this->_model;
+        $data = $this->_model->with(['transaksi.pelanggan','menu']);
         $data = $this->scopeQuery($data, $request->all());
 
         if (!$this->page) {
@@ -65,14 +54,16 @@ class PelangganController extends ApiController
     }
     public function store(Request $request)
     {
-        $params = $request->validate([
-            'nama' => 'required',
-            'no_hp' => 'nullable',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-        $params['tanggal_daftar'] = Carbon::now()->format('Y-m-d');
-        $data = $this->_model->create($params);
+        $params = $request->all();
+        if(@$params['type'] == 'menu') {
+            // 
+            foreach ($params['details'] as $key => $value) {
+                $data = $this->_model->updateOrCreate(['id_transaksi'=>$value['id_transaksi'],'id_menu'=>$value['id_menu']], $value);
+            }
+        }else{
+            $data = $this->_model->updateOrCreate(['id_transaksi'=>$params['id_transaksi'],'id_menu'=>NULL], $params);
+
+        }
         return $this->success(new GeneralResource($data), 'success');
     }
 
@@ -87,20 +78,11 @@ class PelangganController extends ApiController
 
     public function update(Request $request, $id)
     {
-        $params = $request->validate([
-            'nama' => 'required',
-            'no_hp' => 'nullable',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+        $params = $request->all();
         
         $data = $this->_model->find($id);
         if (!$data) {
             abort(404, ' data not found');
-        }
-        $paramsAll =$request->all();
-        if(isset($paramsAll['status'])) {
-            $params['status'] = $paramsAll['status'];
         }
         $data->update($params);
         return $this->success(new GeneralResource($data), 'success');

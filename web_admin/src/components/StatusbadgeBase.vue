@@ -64,6 +64,7 @@ export default {
         case "success":
         case "payment":
         case "Active":
+        case "selesai":
           badgeColor = "bg-success";
           return badgeColor;
         case "process":
@@ -81,6 +82,8 @@ export default {
         case "close":
         case "Deactive":
         case "nonaktif":
+        case "dibatalkan":
+        case "Tidak Aktif":
           badgeColor = "bg-danger";
           return badgeColor;
       }

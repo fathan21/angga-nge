@@ -21,7 +21,7 @@ class AuthController extends ApiController
         
         $user = User::where('username', $request->get('username'))->first();
         if (!$user) {
-            $pelanggan = Pelanggan::where('no_hp', $request->get('username'))->first();
+            $pelanggan = Pelanggan::where('email', $request->get('username'))->first();
             if(!$pelanggan) {
                 return $this->error(422, '#4 salah username atau password');
             }
@@ -43,12 +43,15 @@ class AuthController extends ApiController
         if($user->id_pelanggan) {
             $user->id = $user->id_pelanggan;
             $tokenDt = 'pelanggan_'.$user->id.'_'.random_string(20);
+            $role ='pelanggan';
         }else{
             $tokenDt = $user->id.'_'.random_string(20);
+            $role ='admin';
         
         }
         $token = [
-            'access_token' => $tokenDt
+            'access_token' => $tokenDt,
+            'role'=>$role,
         ];
         Cache::set('access_token'.$user->id,$tokenDt, now()->addDays(10));
         $result = [

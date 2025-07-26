@@ -6,6 +6,7 @@ import Cookies from "../plugins/cookies";
 
 import adminRoute from "./admin";
 import profileRoute from "./profile.js";
+import pelangganR from "./pelanggan.js";
 import authRoute from "./auth.js";
 
 
@@ -34,7 +35,8 @@ const routes = [
         component: Dashbaord
       },
       ...adminRoute,
-      ...profileRoute
+      ...profileRoute,
+      ...pelangganR
     ],
   },
 

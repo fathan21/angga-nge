@@ -5,10 +5,7 @@
         
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.pelanggan.form' })">
-              <i class="fa fa-plus" />
-              Tambah
-            </button>
+            &nbsp;
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -58,21 +55,22 @@
                           }}
                         </td>
                         <td>
-                          {{ user.nama }}
+                            <a class="btn btn-link btn-sm" style="padding: 0px;" @click="openDetail(user)">
+                              {{ user.nama_promo }}
+                            </a>
                         </td>
                         <td>
-                          {{ user.no_hp }}
+                          {{ user.deskripsi }}
                         </td>
                         <td>
-                          {{ $filters.date(user.tanggal_daftar) }}
+                          {{ $filters.date(user.periode_mulai) }} - {{ $filters.date(user.periode_akhir) }}
                         </td>
                         <td>
-                          {{ $filters.currency(user.total_transaksi) }}
+                          
+                          <statusbadge-base :status="user.status">
+                            </statusbadge-base>
                         </td>
-                        <td>
-                          {{ $filters.currency(user.total_poin) }}
-                        </td>
-                        <td style="width: 100px;">
+                        <!-- <td style="width: 100px;">
                           <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Ubah" @click="editItem(user)">
                             <i class="fa fa-pencil" />
@@ -81,7 +79,7 @@
                             data-bs-placement="top" title="Hapus" @click="removeItem(user)">
                             <i class="fa fa-trash" />
                           </button>
-                        </td>
+                        </td> -->
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -126,42 +124,38 @@ export default {
     headers() {
       return [
         {
-          label: "#",
+          label: "No",
           sortable: false,
         },
         {
-          label: "Nama",
-          field: "nama",
+          label: "Nama Promo",
+          field: "nama_promo",
           sortable: true,
         },
         {
-          label: "No Hp",
-          field: "no_hp",
-          sortable: true,
-        },
-        {
-          label: "Tanggal Daftar",
-          field: "tanggal_daftar",
-          sortable: true,
-        },
-        {
-          label: "Total Transaksi",
-          field: "total_transaksi",
-          sortable: true,
-        },
-        {
-          label: "Score",
-          field: "total_poin",
-          sortable: true,
-        },
-        {
-          label: "Action",
+          label: "Deskripsi",
+          field: "deskrpisi",
           sortable: false,
         },
+        {
+          label: "Periode",
+          field: "periode",
+          sortable: false,
+        },
+        {
+          label: "Status",
+          field: "status",
+          sortable: false,
+        },
+        // {
+        //   label: "Action",
+        //   sortable: false,
+        // },
       ];
     },
     moreParams() {
       return {
+        status: 'aktif',
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -192,7 +186,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/pelanggan", { params: this.moreParams })
+        .get("/app/promo", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -229,7 +223,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/pelanggan/${user.id_pelanggan}`, params)
+        .delete(`/app/promo/${user.id_promo}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -241,11 +235,40 @@ export default {
           });
         });
     },
+    
+    openDetail(user) {
+        var html = `<table class="table table-striped jambo_table bulk_action table-bordered table-sm">`;
+          html += `
+            <tr>
+              <td>No</td>
+              <td>Menu</td>
+              <td>Discount</td>
+            </tr>
+          `;
+        for (let index = 0; index < user.details.length; index++) {
+          const element = user.details[index];
+          html += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${element.menu.nama_menu}</td>
+              <td>${element.discount} %</td>
+            </tr>
+          `;
+        }
+        html += `</table>`;
+        this.$swal
+          .fire({
+            width: 500,
+            title: "Detail Promo",
+            html: html,
+          });
+        
+      },
     editItem(item) {
       this.$router.push({
-        name: "app.pelanggan.form",
+        name: "app.promo.form",
         params: {
-          id: item.id_pelanggan,
+          id: item.id_promo,
         },
       });
     },

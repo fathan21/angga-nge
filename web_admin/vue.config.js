@@ -1,7 +1,7 @@
 module.exports = {
   transpileDependencies: ['birpc','vue-toast-notification'],
   productionSourceMap: false,
-  // publicPath:"/warkop/",
+  publicPath:"/warkop/",
   chainWebpack: (config) => {
     config.plugins.delete("preload");
     config.plugins.delete("prefetch");

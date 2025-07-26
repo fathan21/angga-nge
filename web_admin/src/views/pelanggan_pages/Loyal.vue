@@ -5,10 +5,7 @@
         
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.pelanggan.form' })">
-              <i class="fa fa-plus" />
-              Tambah
-            </button>
+            &nbsp;
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -61,27 +58,17 @@
                           {{ user.nama }}
                         </td>
                         <td>
-                          {{ user.no_hp }}
-                        </td>
-                        <td>
-                          {{ $filters.date(user.tanggal_daftar) }}
-                        </td>
-                        <td>
-                          {{ $filters.currency(user.total_transaksi) }}
-                        </td>
-                        <td>
                           {{ $filters.currency(user.total_poin) }}
                         </td>
                         <td style="width: 100px;">
-                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
-                            <i class="fa fa-pencil" />
-                          </button>
-                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
-                            <i class="fa fa-trash" />
-                          </button>
+                          <!-- <select class="form-control" v-model="user.status" @change="updateData(user)">
+                            <option value="1">Aktif</option>
+                            <option value="0">Tidak Aktif</option>
+                          </select> -->
+                          <statusbadge-base :status="user.status == 1 ? 'Aktif' : 'Tidak Aktif'" />
+
                         </td>
+
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -94,7 +81,8 @@
                 </div>
               </b-overlay>
             </div>
-          </div><paging-base v-model="options.current_page" :options="options" v-if="data.length > 0" />
+          </div>
+          <!-- <paging-base v-model="options.current_page" :options="options" v-if="data.length > 0" /> -->
         </div>
       </div>
     </div>
@@ -103,6 +91,9 @@
 
 <script>
 export default {
+  components:{
+    
+  },
   data() {
     return {
       data: [],
@@ -110,8 +101,8 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "nama",
-        order: "asc",
+        sort: "total_poin",
+        order: "desc",
       },
       search: {
         q: "",
@@ -126,42 +117,28 @@ export default {
     headers() {
       return [
         {
-          label: "#",
+          label: "No",
           sortable: false,
         },
         {
-          label: "Nama",
+          label: "Nama Pelanggan Loyal",
           field: "nama",
-          sortable: true,
-        },
-        {
-          label: "No Hp",
-          field: "no_hp",
-          sortable: true,
-        },
-        {
-          label: "Tanggal Daftar",
-          field: "tanggal_daftar",
-          sortable: true,
-        },
-        {
-          label: "Total Transaksi",
-          field: "total_transaksi",
-          sortable: true,
+          sortable: false,
         },
         {
           label: "Score",
           field: "total_poin",
-          sortable: true,
+          sortable: false,
         },
         {
-          label: "Action",
+          label: "Status",
           sortable: false,
         },
       ];
     },
     moreParams() {
       return {
+        with_param: 1,
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -208,6 +185,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    updateData(user) {
+      this.$axios
+        .put("/app/pelanggan/"+user.id_pelanggan, user )
+        ;
     },
     removeItem(item) {
       let labelStatus = "Hapus Data";

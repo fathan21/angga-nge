@@ -13,19 +13,29 @@
                                 <div class="w-100">
 
                                     <div class="text-center">
-                                        <img class="logo-login" :src="`/images/logo-s.png`" style="width: 200px;" />
+                                        <!-- <img class="logo-login" :src="`/images/logo-s.png`" style="width: 200px;" /> -->
+                                        Create Your Account
                                     </div>
                                 </div>
                             </div>
                             <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }"
                                 class="signin-form">
                                 <div class="form-group mt-3">
-                                    <label class="form-control-placeholder" for="username">Username or Email</label>
-                                    <Field name="username" class="form-control" v-model="form.username" :class="[
-                                        { 'p-error': errors.username },
-                                    ]" type="text" placeholder="Enter your username or email" />
-                                    <span class="p-error" v-if="errors.username">
-                                        *{{ errors.username }}
+                                    <label class="form-control-placeholder" for="username">Full Name</label>
+                                    <Field name="nama" class="form-control" v-model="form.nama" :class="[
+                                        { 'p-error': errors.nama },
+                                    ]" type="text" placeholder="Enter your full name" />
+                                    <span class="p-error" v-if="errors.nama">
+                                        *{{ errors.nama }}
+                                    </span>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label class="form-control-placeholder" for="username">Email</label>
+                                    <Field name="email" class="form-control" v-model="form.email" :class="[
+                                        { 'p-error': errors.email },
+                                    ]" type="text" placeholder="Enter your email" />
+                                    <span class="p-error" v-if="errors.email">
+                                        *{{ errors.email }}
                                     </span>
                                 </div>
                                 <div class="form-group">
@@ -38,6 +48,15 @@
                                     </span>
                                 </div>
                                 <div class="form-group">
+                                    <label class="form-control-placeholder" for="password">Confirm Password</label>
+                                    <Field name="con_password" class="form-control" v-model="form.con_password" :class="[
+                                        { 'p-error': errors.con_password },
+                                    ]" type="password" placeholder="Re-enter your password" />
+                                    <span class="p-error" v-if="errors.con_password">
+                                        *{{ errors.con_password }}
+                                    </span>
+                                </div>
+                                <div class="form-group">
                                     <button type="submit" class="
                                             form-control
                                             btn btn-primary
@@ -45,18 +64,18 @@
                                             submit
                                             px-3
                                         ">
-                                        Log In
+                                        Register Now
                                     </button>
                                 </div>
                                 <div class="form-group text-center"
                                     style="border-bottom: 2px solid lightgray;position: relative; margin: 30px 0px;">
                                     <div style="position: absolute;
     background: white;
-    left: 48%;
+    left: 20%;
     padding-left: 10px;
     padding-right: 10px;
     top: -10px;">
-                                        Or
+                                        Already have an account?
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -67,8 +86,8 @@
                                             rounded
                                             submit
                                             px-3
-                                        " @click="$router.push({ name: 'register' })">
-                                        Sign Up
+                                        " @click="$router.push({ name: 'app.login' })">
+                                        Log In
                                     </button>
                                 </div>
                                 <div class="form-group row">
@@ -101,18 +120,12 @@ export default {
             this.$store.dispatch("loading", true);
 
             this.$axios
-                .post("/app/auth/login", values)
+                .post("/app/pelanggan-reg", values)
                 .then((res) => {
-                    this.$store.dispatch("auth/login", res.data);
-                    if (res.data) {
-                        this.$axios.defaults.headers.common["X-AUTH"] =
-                            "" + res.data.access_token;
-                    }
-                    if (res.data.role == "admin") {
-                        this.$router.push("/");
-                    } else {
-                        this.$router.push("/app/pelanggan/input-transaksi");
-                    }
+                    this.$root.notif(res.message, {
+                        type: "info",
+                        position: "top",
+                    });
                     // window.location.href = "/";
                 })
                 .catch((res) => {
@@ -129,7 +142,9 @@ export default {
 
     data() {
         const schema = yup.object({
-            username: yup.string().required(),
+            email: yup.string().required(),
+            nama: yup.string().required(),
+            con_password: yup.string().required().oneOf([yup.ref('password'), null], 'Passwords must match'),
             password: yup.string().required().min(5),
         });
         return {

@@ -68,9 +68,6 @@
                         <td class="text-end">
                           {{ $filters.currency(user.poin) }}
                         </td>
-                        <td>
-                          {{ user.admin ? user.admin.username : "" }}
-                        </td>
                       </tr>
                       <tr v-if="data.length > 0">
                         <td colspan="2" class="font-weight-bold text-end">
@@ -79,7 +76,6 @@
                         <td class="text-bold text-end">
                           <strong>{{ $filters.currency(totalAll) }}</strong>
                         </td>
-                        <td></td>
                         <td></td>
                       </tr>
 
@@ -102,6 +98,7 @@
 </template>
 
 <script>
+import { addDays } from "date-fns";
 import formatDate from "date-fns/format";
 export default {
   data() {
@@ -115,8 +112,8 @@ export default {
         order: "desc",
       },
       search: {
-        start_date: formatDate(new Date(), "yyyy-MM-dd"),
         end_date: formatDate(new Date(), "yyyy-MM-dd"),
+        start_date: formatDate(addDays(new Date(), -100), "yyyy-MM-dd"),
       },
       loading: false,
     };
@@ -148,19 +145,15 @@ export default {
           sortable: true,
         },
         {
-          label: "Poin",
+          label: "Score",
           field: "poin",
           sortable: true,
-        },
-        {
-          label: "Admin",
-          field: "id_admin",
-          sortable: true,
-        },
+        }
       ];
     },
     moreParams() {
       return {
+        status: "selesai",
         per_page: this.options.per_page,
         page: this.options.current_page,
         start_date: this.search.start_date,

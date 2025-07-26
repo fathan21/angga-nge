@@ -173,6 +173,7 @@
       },
       moreParams() {
         return {
+          status_not: "dibatalkan,selesai",
           page: this.options.current_page,
           q: this.search.q,
           sort: this.options.sort + "|" + this.options.order,

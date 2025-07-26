@@ -53,7 +53,6 @@ export default {
       });
     },
     getNotif({commit, state}) {
-      console.log(state);
       if (state.user) {
           axios.get(`/app/notif`).then(v=> {      
             commit("setNotif", v.data);

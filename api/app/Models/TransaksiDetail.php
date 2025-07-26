@@ -16,5 +16,10 @@ class TransaksiDetail extends Model
         return $this->belongsTo(Menu::class, 'id_menu', 'id_menu');
     }
 
+    public function ulasan()
+    {
+        return $this->belongsTo(Ulasan::class, 'id_menu', 'id_menu');
+    }
+
     
 }

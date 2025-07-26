@@ -2,13 +2,10 @@
   <div class="col-md-12 col-sm-12">
     <div class="x_panel">
       <div class="x_title">
-        
+
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            <button class="btn btn-sm btn-primary" type="button" @click="$router.push({ name: 'app.pelanggan.form' })">
-              <i class="fa fa-plus" />
-              Tambah
-            </button>
+            &nbsp;
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -16,15 +13,12 @@
 
       <div class="x_content">
         <div class="table-responsive">
-          <div class="row">
+          <div class="row mb-2">
             <div class="col-12 col-sm-6 col-md-4">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="cari..." v-model="search.q"
-                  @keyup.enter="searchData" />
-                <button class="btn btn-primary" @click="searchData">
-                  Cari
-                </button>
-              </div>
+              <select class="form-control" v-model="search.tipe">
+                <option value="Makanan">Makanan</option>
+                <option value="Pelayanan">Pelayanan</option>
+              </select>
             </div>
           </div>
           <div class="row">
@@ -58,30 +52,40 @@
                           }}
                         </td>
                         <td>
-                          {{ user.nama }}
+                          <template v-if="search.tipe == 'Pelayanan'">
+
+                            {{ user.transaksi.pelanggan.nama }}
+                          </template>
+                          <template v-else>
+                            {{ user.menu.nama_menu }}
+                          </template>
                         </td>
                         <td>
-                          {{ user.no_hp }}
+                          {{ user.tanggal }}
                         </td>
                         <td>
-                          {{ $filters.date(user.tanggal_daftar) }}
+                          <!-- {{ user.rating }} -->
+                          <div style="display: flex;justify-content: center;">
+                            <StarRating read-only :star-size="20" :rating="user.rating" />
+                          </div>
                         </td>
                         <td>
-                          {{ $filters.currency(user.total_transaksi) }}
+                          <div v-html="user.ulasan">
+
+                          </div>
                         </td>
                         <td>
-                          {{ $filters.currency(user.total_poin) }}
-                        </td>
-                        <td style="width: 100px;">
-                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
+                          <!-- <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
                             data-bs-placement="top" title="Ubah" @click="editItem(user)">
-                            <i class="fa fa-pencil" />
-                          </button>
-                          <button class="btn btn-sm btn-danger " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Hapus" @click="removeItem(user)">
-                            <i class="fa fa-trash" />
-                          </button>
+                            Respon
+                          </button> -->
+
+                          <div v-html="user.respon">
+
+                          </div>
+
                         </td>
+
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -102,7 +106,12 @@
 </template>
 
 <script>
+import { format } from "date-fns";
+import StarRating from "vue-star-rating";
 export default {
+  components: {
+    StarRating
+  },
   data() {
     return {
       data: [],
@@ -110,11 +119,12 @@ export default {
         current_page: 1,
         total_row: 10000,
         per_page: 1,
-        sort: "nama",
-        order: "asc",
+        sort: "id",
+        order: "desc",
       },
       search: {
         q: "",
+        tipe: "Pelayanan", // Default type for filtering
       },
       loading: false,
     };
@@ -126,42 +136,39 @@ export default {
     headers() {
       return [
         {
-          label: "#",
+          label: "No",
           sortable: false,
         },
         {
-          label: "Nama",
+          label: this.search.tipe == 'Pelayanan' ? "Nama" : "Nama Menu",
           field: "nama",
-          sortable: true,
+          sortable: false,
         },
         {
-          label: "No Hp",
-          field: "no_hp",
-          sortable: true,
+          label: "Tanggal",
+          field: "nama",
+          sortable: false,
         },
         {
-          label: "Tanggal Daftar",
-          field: "tanggal_daftar",
-          sortable: true,
+          label: "Rating",
+          field: "Rating",
+          sortable: false,
         },
         {
-          label: "Total Transaksi",
-          field: "total_transaksi",
-          sortable: true,
+          label: "Ulasan",
+          field: "Ulasan",
+          sortable: false,
         },
         {
-          label: "Score",
-          field: "total_poin",
-          sortable: true,
-        },
-        {
-          label: "Action",
+          label: "Respon",
           sortable: false,
         },
       ];
     },
     moreParams() {
       return {
+        // id_pelanggan: this.$store.state.auth.user.id,
+        tipe: this.search.tipe,
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -171,6 +178,12 @@ export default {
   watch: {
     "options.current_page": {
       handler: function () {
+        this.loadData();
+      },
+    },
+    "search.tipe": {
+      handler: function () {
+        this.data = [];
         this.loadData();
       },
     },
@@ -192,7 +205,7 @@ export default {
     loadData() {
       this.loading = true;
       this.$axios
-        .get("/app/pelanggan", { params: this.moreParams })
+        .get("/app/ulasan", { params: this.moreParams })
         .then((res) => {
           this.loading = false;
           this.data = res.data.data;
@@ -208,6 +221,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    updateData(user) {
+      this.$axios
+        .put("/app/loyal/" + user.id, user)
+        ;
     },
     removeItem(item) {
       let labelStatus = "Hapus Data";
@@ -229,7 +247,7 @@ export default {
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
-        .delete(`/app/pelanggan/${user.id_pelanggan}`, params)
+        .delete(`/app/ulasan/${user.id}`, params)
         .then((res) => {
           this.$root.notif(res.message);
           this.loadData();
@@ -242,12 +260,62 @@ export default {
         });
     },
     editItem(item) {
-      this.$router.push({
-        name: "app.pelanggan.form",
-        params: {
-          id: item.id_pelanggan,
-        },
-      });
+
+
+      this.$swal
+        .fire({
+          width: 500,
+          title: "Respon",
+          focusConfirm: false,
+          html: `
+            <div class="text-start">
+              Ulasan
+            </div>
+            <div class="mb-4 text-start pe-2" style="padding-left:10px">
+              ${item.ulasan}
+            </div>
+            <div class="text-start">
+              Respon
+            </div>
+            <textarea id="swal-respons" class="form-control mb-2" placeholder="Respon">${item.respon ? item.respon : ''}</textarea>
+          `,
+          showCancelButton: true,
+          preConfirm: () => {
+            return [
+              document.getElementById("swal-respons").value
+            ];
+          },
+          confirmButtonText: "Simpan",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            if (result.value) {
+              let respon = result.value[0];
+              item.respon = respon;
+              item.tanggal_repon = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+              if (respon) {
+                this.$axios
+                  .put("/app/ulasan/" + item.id, item)
+                  .then((res) => {
+                    this.$root.notif(res.message);
+                    this.loadData();
+                  })
+                  .catch((res) => {
+                    this.$root.notif(res.message, {
+                      type: "error",
+                      position: "top",
+                    });
+                  });
+              } else {
+                this.$root.notif("Semua field harus diisi", {
+                  type: "error",
+                  position: "top",
+                });
+              }
+            }
+          }
+        });
+
     },
   },
 };
