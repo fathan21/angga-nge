@@ -60,12 +60,14 @@ class MenuController extends ApiController
 
             $result->getCollection()->transform(function ($q) use ($promo) {
                 $harga = $q->harga;
+                $q->harga_awal = $harga;
                 $count = Ulasan::where('id_menu', $q->id_menu)
                     ->where('rating', '>', 0)
                     ->count('id');
                 $sum = Ulasan::where('id_menu', $q->id_menu)
                     ->where('rating', '>', 0)
                     ->sum('rating');
+                $diskon = 0;
                 if ($promo) {
                     $c = $promo->details->where('id_menu', $q->id_menu)->first();
                     if ($c) {
@@ -76,9 +78,11 @@ class MenuController extends ApiController
                             'deskripsi' => $promo->deskripsi,
                             'harga_awal'=>$harga,
                         ];
-                        $harga = $harga - ($harga * $c->discount / 100);
+                        $diskon = ($harga * $c->discount / 100);
+                        $harga = $harga - $diskon;
                     }
                 }
+                $q->diskon = $diskon;
                 $q->rating = $count > 0 ? $sum / $count : null;
                 $q->harga = $harga;
 

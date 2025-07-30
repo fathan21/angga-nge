@@ -66,22 +66,21 @@
                         <td>
                           <!-- {{ user.rating }} -->
                           <div style="display: flex;justify-content: center;">
-                            <StarRating read-only :star-size="20" :rating="user.rating" />
+                            <StarRating read-only :increment="0.01" :star-size="20" :rating="user.rating" />
                           </div>
                         </td>
-                        <td>
+                        <td v-if="search.tipe == 'Pelayanan'">
                           <div v-html="user.ulasan">
 
                           </div>
                         </td>
                         <td>
-                          <!-- <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
-                            data-bs-placement="top" title="Ubah" @click="editItem(user)">
-                            Respon
-                          </button> -->
+                          <button class="btn btn-sm btn-primary " type="button" data-bs-toggle="tooltip"
+                            data-bs-placement="top" title="Ubah" @click="detailItem(user)" v-if="search.tipe != 'Pelayanan'">
+                            Detail
+                          </button>
 
                           <div v-html="user.respon">
-
                           </div>
 
                         </td>
@@ -102,18 +101,26 @@
         </div>
       </div>
     </div>
+
+    <ModalBase v-model="modalDetail" size="modal-lg">
+        <UlasanModal v-model="modalDetail"  :modalData="modalData"    @close="modalDetail=false" />
+    </ModalBase>
   </div>
 </template>
 
 <script>
 import { format } from "date-fns";
 import StarRating from "vue-star-rating";
+import UlasanModal from "./components/UlasanModal.vue";
 export default {
   components: {
-    StarRating
+    StarRating,
+    UlasanModal
   },
   data() {
     return {
+      modalData: {},
+      modalDetail: false,
       data: [],
       options: {
         current_page: 1,
@@ -134,6 +141,33 @@ export default {
   },
   computed: {
     headers() {
+      if(this.search.tipe != 'Pelayanan') {
+        return [
+          {
+            label: "No",
+            sortable: false,
+          },
+          {
+            label: "Nama Menu",
+            field: "nama",
+            sortable: false,
+          },
+          {
+            label: "Last Update",
+            field: "nama",
+            sortable: false,
+          },
+          {
+            label: "Rating",
+            field: "Rating",
+            sortable: false,
+          },
+          {
+            label: "Detail",
+            sortable: false,
+          },
+        ];
+      }
       return [
         {
           label: "No",
@@ -145,7 +179,7 @@ export default {
           sortable: false,
         },
         {
-          label: "Tanggal",
+          label:  this.search.tipe == 'Pelayanan' ? "Tanggal" : "Last Update" ,
           field: "nama",
           sortable: false,
         },
@@ -160,7 +194,7 @@ export default {
           sortable: false,
         },
         {
-          label: "Respon",
+          label: this.search.tipe == 'Pelayanan' ? "Respon" : "Detail" ,
           sortable: false,
         },
       ];
@@ -189,6 +223,10 @@ export default {
     },
   },
   methods: {
+    detailItem(item) {
+      this.modalData = item;
+      this.modalDetail = true; 
+    },
     sorter(field) {
       if (this.options.sort == field) {
         this.options.order = this.options.order == "asc" ? "desc" : "asc";

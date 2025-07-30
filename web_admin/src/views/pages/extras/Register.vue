@@ -13,7 +13,6 @@
                                 <div class="w-100">
 
                                     <div class="text-center">
-                                        <!-- <img class="logo-login" :src="`/images/logo-s.png`" style="width: 200px;" /> -->
                                         Create Your Account
                                     </div>
                                 </div>

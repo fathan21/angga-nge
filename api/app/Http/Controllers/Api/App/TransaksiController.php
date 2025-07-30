@@ -91,7 +91,7 @@ class TransaksiController extends ApiController
             'tanggal_transaksi' => 'required',
             'id_pelanggan' => 'required'
         ]);
-        $params['status'] = 'dipesan';
+        $params['status'] = 'Menuggu di Proses';
         $params['tanggal_transaksi'] = Carbon::now();
         $paramsAll = $request->validate([
             'details' => 'required|array'
@@ -153,13 +153,13 @@ class TransaksiController extends ApiController
             }
             $data->update(['status' => $params['status']]);
 
-            if (@$params['status'] == 'selesai') {
+            if (@$params['status'] == 'Lunas') {
 
                 $loyal1 = Loyal::find(1);
                 $loyalKelipatan = Loyal::find(2);
 
                 $trxC = Transaksi::where('id_pelanggan', $data->id_pelanggan)
-                    ->where('status', 'selesai')
+                    ->where('status', 'Lunas')
                     ->count();
                 $pelanggan = Pelanggan::find($data->id_pelanggan);
 

@@ -193,6 +193,8 @@
             return {
               id_menu: v.id_menu,
               jumlah: v.jumlah,
+              diskon: v.diskon,
+              harga: v.harga_awal,
               subtotal: v.subtotal,
             };
           }),
@@ -240,6 +242,9 @@
           this.details.push({
             menu: item,
             id_menu: item.id_menu,
+            harga_awal: item.harga_awal,
+            harga: item.harga,
+            diskon: item.diskon,
             jumlah: 1,
             subtotal: 1 * parseInt(item.harga),
           });

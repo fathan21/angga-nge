@@ -18,7 +18,7 @@
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <img src="/images/img-user.png" alt="" />
+                            <img :src="`${$PUBLIC_PATH}/images/img-user.png`" alt="" />
                                 {{ this.user ? this.user.username : "" }}
                         </a>
                         <div

@@ -72,6 +72,16 @@
                           <statusbadge-base :status="user.status">
                           </statusbadge-base>
                         </td>
+                        <td>
+                            <button  v-if="user.status =='Pesanan Siap'" class="btn btn-sm btn-outline-primary " type="button" data-bs-toggle="tooltip"
+                              data-bs-placement="top" title="Ubah" @click="updateStatus(user,'Menuggu Pembayaran')">
+                              Pesanan di Terima
+                            </button>
+                            <button  v-if="user.status =='Menuggu Pembayaran'" class="btn btn-sm btn-outline-primary " type="button" data-bs-toggle="tooltip"
+                              data-bs-placement="top" title="Ubah" @click="updateStatus(user,'Menuggu Konfirmasi Pembayaran')">
+                              Menuggu Pembayaran
+                            </button>
+                        </td>
                       </tr>
 
                       <tr v-if="data.length <= 0 && !loading">
@@ -92,7 +102,10 @@
 </template>
 
 <script>
+import detailMixin from '../../plugins/detail-pesanan';
+
 export default {
+  mixins:[detailMixin],
   data() {
     return {
       data: [],
@@ -144,12 +157,17 @@ export default {
           field: "status",
           sortable: false,
         },
+        {
+          label: "Action",
+          field: "status",
+          sortable: false,
+        },
       ];
     },
     moreParams() {
       return {
         id_pelanggan: this.$store.state.auth.user.id,
-        status_not: "dibatalkan,selesai",
+        status_not: "Dibatalkan,Lunas",
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -201,7 +219,7 @@ export default {
       let labelStatus = sl;
       this.$swal
         .fire({
-          width: 350,
+          width: 450,
           title: "Yakin?",
           showCancelButton: true,
           confirmButtonText: labelStatus.toUpperCase(),
@@ -227,36 +245,6 @@ export default {
             position: "top",
           });
         });
-    },
-    openDetail(user) {
-      var html = `<table class="table table-striped jambo_table bulk_action table-bordered">`;
-        html += `
-          <tr>
-            <td>No</td>
-            <td>Menu</td>
-            <td>Qty</td>
-            <td>Total</td>
-          </tr>
-        `;
-      for (let index = 0; index < user.details.length; index++) {
-        const element = user.details[index];
-        html += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${element.menu.nama_menu}</td>
-            <td>${element.jumlah}</td>
-            <td>${this.$filters.currency(element.subtotal)}</td>
-          </tr>
-        `;
-      }
-      html += `</table>`;
-      this.$swal
-        .fire({
-          width: 400,
-          title: "Detail Pesanan",
-          html: html,
-        });
-      
     }
   },
 };

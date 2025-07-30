@@ -22,7 +22,7 @@
                     <div class="profile clearfix">
                         <div class="profile_pic">
                             <img
-                                src="/Logo_Zonerone.png"
+                                :src="`${$PUBLIC_PATH}/Logo_Zonerone.png`"
                                 class="img-circle profile_img"
                             />
                         </div>

@@ -70,6 +70,7 @@ const register = (app) => {
   app.config.globalProperties.$appName = process.env.VUE_APP_TITLE;
   app.config.globalProperties.$appEnv = process.env.VUE_APP_ENV;
   app.config.globalProperties.$API_URL = process.env.VUE_APP_API_URL;
+  app.config.globalProperties.$PUBLIC_PATH = 'http://localhost:8088'; //process.env.VUE_APP_PUBLIC_PATH;
   
   
   app.component(VueCountdown.name, VueCountdown);

@@ -28,6 +28,9 @@ class UlasanController extends ApiController
         if(@$params['tipe']) {
             $data = $data->where('tipe', $params['tipe']);
         }
+        if(@$params['id_menu']) {
+            $data = $data->where('id_menu', $params['id_menu']);
+        }
 
         if(@$params['id_pelanggan']) {
             $data = $data->whereHas('transaksi.pelanggan', function($query) use ($params) {
@@ -43,11 +46,22 @@ class UlasanController extends ApiController
     public function index(Request $request)
     {
         $data = $this->_model->with(['transaksi.pelanggan','menu']);
-        $data = $this->scopeQuery($data, $request->all());
+        $params = $request->all();
+        $data = $this->scopeQuery($data, $params);
 
         if (!$this->page) {
             $result = $data->get();
         } else {
+            if(@$params['tipe'] == 'Makanan' && !@$params['detail']) {
+                $data = $data->selectRaw('
+                    id_transaksi,
+                    id_menu,
+                    max(tanggal) as tanggal,
+                    tipe,
+                    sum(rating) / count(id) as rating
+                ');
+                $data = $data->groupBy('id_menu', 'tipe');
+            } 
             $result = $data->paginate($this->perPage);
         }
         return $this->success(GeneralResource::collection($result)->response()->getData(true));

@@ -106,6 +106,8 @@ export default {
           return {
             id_menu: v.id_menu,
             jumlah: v.jumlah,
+            harga: v.harga,
+            diskon: v.diskon,
             subtotal: v.subtotal,
           };
         }),

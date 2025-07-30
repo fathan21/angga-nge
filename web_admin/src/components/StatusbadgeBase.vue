@@ -64,7 +64,7 @@ export default {
         case "success":
         case "payment":
         case "Active":
-        case "selesai":
+        case "Lunas":
           badgeColor = "bg-success";
           return badgeColor;
         case "process":

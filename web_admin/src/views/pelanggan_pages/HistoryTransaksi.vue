@@ -111,8 +111,11 @@
 <script>
 import RatingMakana from './components/RatingMakana.vue';
 import RatingPelayanan from './components/RatingPelayanan.vue';
-
+import detailMixin from '../../plugins/detail-pesanan.js';
 export default {
+  mixins:[
+  detailMixin
+  ],
   components: {
     RatingPelayanan,
     RatingMakana
@@ -183,7 +186,7 @@ export default {
     moreParams() {
       return {
         id_pelanggan: this.$store.state.auth.user.id,
-        status: "dibatalkan,selesai",
+        status: "Dibatalkan,Lunas",
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -279,38 +282,6 @@ export default {
             position: "top",
           });
         });
-    },
-    openDetail(user) {
-      var html = `<table class=" text-start table table-striped jambo_table bulk_action table-bordered">`;
-        html += `
-          <tr>
-            <td>No</td>
-            <td>Nama Menu</td>
-            <td>Qty</td>
-            <td>Harga</td>
-            <td>Rating</td>
-          </tr>
-        `;
-      for (let index = 0; index < user.details.length; index++) {
-        const element = user.details[index];
-        html += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${element.menu.nama_menu}</td>
-            <td>${element.jumlah}</td>
-            <td>${this.$filters.currency(element.subtotal)}</td>
-            <td>${element.rating?element.rating.toFixed(2):''}</td>
-          </tr>
-        `;
-      }
-      html += `</table>`;
-      this.$swal
-        .fire({
-          width: 600,
-          title: "Detail Pesanan",
-          html: html,
-        });
-      
     }
   },
 };

@@ -5,17 +5,10 @@
         <div>&nbsp;</div>
         <div class="row">
           <div class="col-12 col-md-4">
-            <input-date-picker-range-base
-              v-model:start_date="search.start_date"
-              v-model:end_date="search.end_date"
-            />
+            <input-date-picker-range-base v-model:start_date="search.start_date" v-model:end_date="search.end_date" />
           </div>
           <div class="col-12 col-md-8 text-end">
-            <button
-              class="btn btn-outline-primary"
-              type="button"
-              @click="cetak"
-            >
+            <button class="btn btn-outline-primary" type="button" @click="cetak">
               Cetak
             </button>
           </div>
@@ -29,27 +22,19 @@
             <div class="col-sm-12">
               <b-overlay :show="loading" rounded="sm">
                 <div id="table-cetak-2">
-                  <table
-                    class="table table-striped jambo_table bulk_action table-bordered"
-                    id=""
-                  >
+                  <table class="table table-striped jambo_table bulk_action table-bordered" id="">
                     <thead>
                       <tr>
-                        <th
-                          v-for="(header, i) in headers"
-                          :key="i"
-                          :class="[
-                            header.sortable ? ' sortable ' : '',
-                            header.field == options.sort &&
+                        <th v-for="(header, i) in headers" :key="i" :class="[
+                          header.sortable ? ' sortable ' : '',
+                          header.field == options.sort &&
                             options.order == 'asc'
-                              ? ' asc '
-                              : header.field == options.sort &&
-                                options.order == 'desc'
+                            ? ' asc '
+                            : header.field == options.sort &&
+                              options.order == 'desc'
                               ? ' desc '
                               : 'both',
-                          ]"
-                          @click="header.sortable ? sorter(header.field) : null"
-                        >
+                        ]" @click="header.sortable ? sorter(header.field) : null">
                           {{ header.label }}
                         </th>
                       </tr>
@@ -153,7 +138,7 @@ export default {
     },
     moreParams() {
       return {
-        status: "selesai",
+        status: "Lunas",
         per_page: this.options.per_page,
         page: this.options.current_page,
         start_date: this.search.start_date,
@@ -183,7 +168,7 @@ export default {
         <html>
           <head>
             <title>Print </title>
-            <link rel="stylesheet" href="/vendors/bootstrap-5.0.2-dist/css/bootstrap.min.css">
+            <link rel="stylesheet" href="${this.$PUBLIC_PATH}/vendors/bootstrap-5.0.2-dist/css/bootstrap.min.css">
           </head>
           <body>
             ${printContent}

@@ -136,7 +136,7 @@ export default {
         <html>
           <head>
             <title>Print </title>
-            <link rel="stylesheet" href="/vendors/bootstrap-5.0.2-dist/css/bootstrap.min.css">
+            <link rel="stylesheet" href="${this.$PUBLIC_PATH}/vendors/bootstrap-5.0.2-dist/css/bootstrap.min.css">
           </head>
           <body>
             ${printContent}

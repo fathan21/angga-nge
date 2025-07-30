@@ -13,7 +13,7 @@
                                 <div class="w-100">
 
                                     <div class="text-center">
-                                        <img class="logo-login" :src="`/images/logo-s.png`" style="width: 200px;" />
+                                        <img class="logo-login" :src="`${$PUBLIC_PATH}/images/logo-s.png`" style="width: 200px;" />
                                     </div>
                                 </div>
                             </div>
