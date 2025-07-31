@@ -25,12 +25,21 @@ class UlasanController extends ApiController
     public function scopeQuery($data, $params = [])
     {
         
+        if(@$params['start_date']) {
+            $data = $data->where('tanggal','>=', $params['start_date']);
+        }
+        if(@$params['end_date']) {
+            $data = $data->where('tanggal','<=', $params['end_date'].' 23:59:59');
+        }
+
         if(@$params['tipe']) {
             $data = $data->where('tipe', $params['tipe']);
         }
+
         if(@$params['id_menu']) {
             $data = $data->where('id_menu', $params['id_menu']);
         }
+        
 
         if(@$params['id_pelanggan']) {
             $data = $data->whereHas('transaksi.pelanggan', function($query) use ($params) {

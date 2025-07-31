@@ -149,18 +149,18 @@ export default {
           },
           {
             label: "Nama Menu",
-            field: "nama",
-            sortable: false,
+            field: "id_menu",
+            sortable: true,
           },
           {
             label: "Last Update",
-            field: "nama",
-            sortable: false,
+            field: "tanggal",
+            sortable: true,
           },
           {
             label: "Rating",
-            field: "Rating",
-            sortable: false,
+            field: "rating",
+            sortable: true,
           },
           {
             label: "Detail",
@@ -180,13 +180,13 @@ export default {
         },
         {
           label:  this.search.tipe == 'Pelayanan' ? "Tanggal" : "Last Update" ,
-          field: "nama",
-          sortable: false,
+          field: "tanggal",
+          sortable: true,
         },
         {
           label: "Rating",
-          field: "Rating",
-          sortable: false,
+          field: "rating",
+          sortable: true,
         },
         {
           label: "Ulasan",

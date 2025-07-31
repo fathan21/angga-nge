@@ -12,13 +12,25 @@
       </div>
 
       <div class="x_content">
-        <div class="table-responsive">
+        <div class="table-responsive" style="min-height: 500px;">
           <div class="row mb-2">
-            <div class="col-12 col-sm-6 col-md-4">
+            <div class="col-12 col-sm-6 col-md-3">
              <select class="form-control" v-model="search.tipe">
               <option value="Makanan">Makanan</option>
               <option value="Pelayanan">Pelayanan</option>
              </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3" v-if="search.tipe =='Makanan'">
+             <select class="form-control" v-model="search.id_menu">
+              <option value="">Pilih Menu</option>
+              <option v-for="menu in menus" :key="menu.id_menu" :value="menu.id_menu">
+                {{ menu.nama_menu }}
+                </option>
+             </select>
+            </div>
+            
+            <div class="col-12 col-md-4">
+              <input-date-picker-range-base v-model:start_date="search.start_date" v-model:end_date="search.end_date" />
             </div>
           </div>
           <div class="row">
@@ -103,6 +115,8 @@
 
 <script>
 import { format } from "date-fns";
+import { addDays } from "date-fns";
+import formatDate from "date-fns/format";
 import StarRating from "vue-star-rating";
 export default {
   components: {
@@ -111,6 +125,7 @@ export default {
   data() {
     return {
       data: [],
+      menus:[],
       options: {
         current_page: 1,
         total_row: 10000,
@@ -119,6 +134,9 @@ export default {
         order: "desc",
       },
       search: {
+        end_date: formatDate(new Date(), "yyyy-MM-dd"),
+        start_date: formatDate(addDays(new Date(), -100), "yyyy-MM-dd"),
+        id_menu: "",
         q: "",
         tipe: "Pelayanan", // Default type for filtering
       },
@@ -126,6 +144,7 @@ export default {
     };
   },
   mounted() {
+    this.loadMenu();
     this.searchData();
   },
   computed: {
@@ -137,18 +156,18 @@ export default {
         },
         {
           label: this.search.tipe =='Pelayanan' ? "Nama" :"Nama Menu",
-          field: "nama",
-          sortable: false,
+          field: "id_menu",
+          sortable: this.search.tipe =='Pelayanan' ? false :true,
         },
         {
           label: "Tanggal",
-          field: "nama",
-          sortable: false,
+          field: "tanggal",
+          sortable: true,
         },
         {
           label: "Rating",
-          field: "Rating",
-          sortable: false,
+          field: "rating",
+          sortable: true,
         },
         {
           label: "Ulasan",
@@ -163,7 +182,11 @@ export default {
     },
     moreParams() {
       return {
+        id_menu: this.search.id_menu,
+        detail:1,
         tipe: this.search.tipe,
+        start_date: this.search.start_date,
+        end_date: this.search.end_date,
         page: this.options.current_page,
         q: this.search.q,
         sort: this.options.sort + "|" + this.options.order,
@@ -171,13 +194,32 @@ export default {
     },
   },
   watch: {
-    "options.current_page": {
+    "search.current_page": {
+      handler: function () {
+        this.loadData();
+      },
+    },
+    "search.start_date": {
+      handler: function () {
+        this.loadData();
+      },
+    },
+    "options.end_date": {
       handler: function () {
         this.loadData();
       },
     },
     "search.tipe": {
       handler: function () {
+        this.data = [];
+        this.search.id_menu = "";
+        this.loadData();
+      },
+    },
+    "search.id_menu": {
+      handler: function () {
+        this.options.sort = "id";
+        this.options.order = "desc";
         this.data = [];
         this.loadData();
       },
@@ -215,6 +257,14 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+        });
+    },
+    loadMenu() {
+      this.$axios
+        .get("/app/menu", {  })
+        .then((res) => {
+          this.loading = false;
+          this.menus = res.data.data;
         });
     },
     updateData(user) {

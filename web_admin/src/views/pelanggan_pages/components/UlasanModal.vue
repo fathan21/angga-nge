@@ -151,18 +151,18 @@
           },
           {
             label: this.search.tipe == 'Pelayanan' ? "Nama" : "Nama Menu",
-            field: "nama",
-            sortable: false,
+            field: "id_menu",
+            sortable: true,
           },
           {
             label: "Tanggal",
-            field: "nama",
-            sortable: false,
+            field: "tanggal",
+            sortable: true,
           },
           {
             label: "Rating",
-            field: "Rating",
-            sortable: false,
+            field: "rating",
+            sortable: true,
           },
           {
             label: "Ulasan",
