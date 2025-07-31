@@ -73,11 +73,11 @@
                           </statusbadge-base>
                         </td>
                         <td>
-                          <button  class="btn btn-sm btn-info " type="button" data-bs-toggle="tooltip"
-                              data-bs-placement="top" title="Ubah" @click="rLayanan(user)">
+                          <button  class="btn btn-sm btn-info" :disabled="user.ulasan && user.ulasan.id ?'disabled':null " type="button" data-bs-toggle="tooltip"
+                              data-bs-placement="top" title="Ubah" @click="rLayanan(user)" >
                                 Rating Pelayan
                             </button>
-                          <button  class="btn btn-sm btn-info " type="button" data-bs-toggle="tooltip"
+                          <button  class="btn btn-sm btn-info " :disabled="user.details && user.details.find(v=>v.ulasan && v.ulasan.id) ?'disabled':null "  type="button" data-bs-toggle="tooltip"
                               data-bs-placement="top" title="Ubah" @click="rMakanan(user)">
                                 Rating Menu
                             </button>
