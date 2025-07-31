@@ -142,4 +142,13 @@ class UserController extends ApiController
         ];
         return $this->success($data);
     }
+
+    public function notif()  {
+        
+        return $this->success(
+            [
+                'notif_pesanan'=>Transaksi::whereNotIn('status', ['Lunas','Dibatalkan'])->count()
+            ]
+        );
+    }
 }

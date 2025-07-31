@@ -17,7 +17,7 @@
                   v-if="menu.childs && menu.childs.length > 0"
                 ></span>
                 <span
-                  class="badge bg-green badge-notif"
+                  class="badge bg-blue badge-notif"
                   v-if="menu.notif"
                   v-text="menu.notif"
                 >
@@ -32,7 +32,7 @@
                   v-if="menu.childs && menu.childs.length > 0"
                 ></span>
                 <span
-                  class="badge bg-green badge-notif"
+                  class="badge bg-blue badge-notif"
                   v-if="menu.notif"
                   v-text="menu.notif"
                 >
@@ -61,7 +61,7 @@
                     >
                     </span>
                     <span
-                      class="badge bg-green badge-notif-2"
+                      class="badge bg-blue badge-notif-2"
                       v-if="child.notif"
                       v-text="child.notif"
                     ></span>
@@ -75,7 +75,7 @@
                       {{ child.label }}
                       <span class="fa fa-chevron-down"></span>
                       <span
-                        class="badge bg-green badge-notif"
+                        class="badge bg-blue badge-notif"
                         v-if="child.notif"
                         v-text="child.notif"
                       >
@@ -95,7 +95,7 @@
                         >
                           {{ child_child.label }}
                           <span
-                            class="badge bg-green badge-notif-2"
+                            class="badge bg-blue badge-notif-2"
                             v-if="child_child.notif"
                             v-text="child_child.notif"
                           ></span>

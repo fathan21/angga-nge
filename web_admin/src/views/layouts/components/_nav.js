@@ -68,6 +68,7 @@ const navAdmin = [
     label: "Daftar Pesanan",
     icon: "fa fa-list",
     route: "app.transaksi.pesanan",
+    // notif_name: "notif_pesanan",
   },
   {
     name: "Data Menu",

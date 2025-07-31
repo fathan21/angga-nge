@@ -98,16 +98,33 @@
         </div>
       </div>
     </div>
+
+    <ModalBase v-model="modalRatingLayanan">
+        <RatingPelayanan v-model="modalRatingLayanan" :data="modalData" :pertanyaan="pertanyaan" @close="modalRatingLayanan=false" />
+    </ModalBase>
+    <ModalBase v-model="modalRatingMakan" size="modal-lg">
+        <RatingMakana v-model="modalRatingMakan"  :data="modalData"  :pertanyaan="pertanyaan"  @close="modalRatingMakan=false" />
+    </ModalBase>
   </div>
 </template>
 
 <script>
 import detailMixin from '../../plugins/detail-pesanan';
+import RatingMakana from './components/RatingMakana.vue';
+import RatingPelayanan from './components/RatingPelayanan.vue';
 
 export default {
+  components:{
+    RatingMakana,
+    RatingPelayanan
+  },
   mixins:[detailMixin],
   data() {
     return {
+      modalRatingMakan: false,
+      modalRatingLayanan: false,
+      modalData:{},
+      pertanyaan:[],
       data: [],
       options: {
         current_page: 1,
@@ -124,6 +141,7 @@ export default {
   },
   mounted() {
     this.searchData();
+    this.loadPertanyaan();
   },
   computed: {
     headers() {
@@ -180,8 +198,23 @@ export default {
         this.loadData();
       },
     },
+    modalRatingLayanan() {
+      if(!this.modalRatingLayanan) {
+        this.modalRatingMakan = true;
+      }
+    }
   },
   methods: {
+    loadPertanyaan() {
+      this.loading = true;
+      this.$axios
+        .get("/app/ulasan-pertanyaan", { })
+        .then((res) => {
+          this.loading = false;
+          this.pertanyaan = res.data.data;
+          // console.log(this.pertanyaan);
+        });
+    },
     sorter(field) {
       if (this.options.sort == field) {
         this.options.order = this.options.order == "asc" ? "desc" : "asc";
@@ -231,12 +264,17 @@ export default {
         });
     },
     _updateStatus(user, newStatus) {
+      
       let params = Object.assign({}, user);
       params.status = newStatus;
       this.$axios
         .put(`/app/transaksi/${user.id_transaksi}`, params)
         .then((res) => {
           this.$root.notif(res.message);
+          if(newStatus == 'Menuggu Konfirmasi Pembayaran') {
+            this.modalRatingLayanan = true;
+            this.modalData = user;
+          }
           this.loadData();
         })
         .catch((res) => {
