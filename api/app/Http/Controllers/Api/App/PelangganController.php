@@ -91,7 +91,7 @@ class PelangganController extends ApiController
             'nama' => 'required',
             'no_hp' => 'nullable',
             'email' => 'required',
-            'password' => 'required'
+            // 'password' => 'required'
         ]);
         
         $data = $this->_model->find($id);

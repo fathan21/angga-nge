@@ -107,6 +107,18 @@ class UserController extends ApiController
 
     function info() {
         $user = $this->user();
+        if(@$user->role == 'pelanggan') {
+            return $this->success([
+                'username'=>$user->nama,
+                'nama'=>$user->nama,
+                'id'=>$user->id_pelanggan,
+                'role'=>$user->role,
+                'total_poin'=>$user->total_poin,
+                'no_hp'=>$user->no_hp,
+                'email'=>$user->email,
+                'created_at'=>$user->created_at
+            ]);
+        }
         return $this->success([
             'username'=>$user->username,
             'id'=>$user->id,

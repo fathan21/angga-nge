@@ -38,7 +38,13 @@ class AuthCus
             }
             $user = $pelanggan;
             $user->username = $pelanggan->nama;
+            $user->nama = $pelanggan->nama;
             $user->id = $pelanggan->id_pelanggan;
+            $user->total_poin = $pelanggan->total_poin;
+            $user->created_at = (String) $pelanggan->tanggal_daftar;
+            $user->email = (String) $pelanggan->email;
+            $user->no_hp = (String) $pelanggan->no_hp;
+            $user->email = (String) $pelanggan->email;
             $user->role = 'pelanggan';
         }else{
             $user->role = 'admin';

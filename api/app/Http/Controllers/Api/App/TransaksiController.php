@@ -157,18 +157,24 @@ class TransaksiController extends ApiController
 
                 $loyal1 = Loyal::find(1);
                 $loyalKelipatan = Loyal::find(2);
+                $loyalKelipatanMax = Loyal::find(3);
 
                 $trxC = Transaksi::where('id_pelanggan', $data->id_pelanggan)
                     ->where('status', 'Lunas')
                     ->count();
                 $pelanggan = Pelanggan::find($data->id_pelanggan);
 
-                if ($trxC == 0) {
+                if ($trxC == 1) {
                     $data->poin = $loyal1->poin;
                     $pelanggan->total_poin = $loyal1->poin;
                 } else {
-                    $data->poin = $loyalKelipatan->poin;
-                    $pelanggan->total_poin += $loyalKelipatan->poin;
+                    $p = $loyalKelipatan->poin * ($trxC-1);
+                    if($p > $loyalKelipatanMax->poin) {
+                        $p = $loyalKelipatanMax->poin;
+                    }
+                    $p = $p + $loyal1->poin;
+                    $data->poin = $p;
+                    $pelanggan->total_poin += $p;
                 }
                 $pelanggan->total_transaksi += $data->total;
                 $pelanggan->save();

@@ -144,7 +144,7 @@ const navPl = [
   {
     name: "Input Transaksi",
     label: "Input Transaksi",
-    icon: "fa fa-list",
+    icon: "fa fa-comment",
     route: "pelanggan.input-transaksi",
   },
   {
@@ -156,25 +156,25 @@ const navPl = [
   {
     name: "Promo",
     label: "Promo",
-    icon: "fa fa-list",
+    icon: "fa fa-bar-chart",
     route: "pelanggan.promo",
   },
   {
     name: "Pelanggan Loyal",
     label: "Pelanggan Loyal",
-    icon: "fa fa-list",
+    icon: "fa fa-bar-chart",
     route: "pelanggan.loyal",
   },
   {
     name: "Ulasan",
     label: "Ulasan",
-    icon: "fa fa-list",
+    icon: "fa fa-bar-chart",
     route: "pelanggan.ulasan",
   },
   {
     name: "History Transaksi",
     label: "History Transaksi",
-    icon: "fa fa-list",
+    icon: "fa fa-book",
     route: "pelanggan.history-transaksi",
   },
 

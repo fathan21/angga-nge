@@ -5,7 +5,9 @@
         
         <ul class="nav navbar-right panel_toolbox">
           <li>
-            &nbsp;
+            <button type="button" class="btn btn-info" @click="simpan">
+              Simpan
+            </button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -166,6 +168,12 @@ export default {
       this.$axios
         .put("/app/loyal/"+user.id, user )
         ;
+    },
+    simpan() {
+      this.$root.notif('berhasil simpan data', {
+            type: "info",
+            position: "top",
+          });
     },
     removeItem(item) {
       let labelStatus = "Hapus Data";
